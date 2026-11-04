@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dreams — Team Logan</title>
+  <meta name="description" content="Team Logan's Dreams: DeepDream images and what they show.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="maze.css">
+  <link rel="stylesheet" href="paths.css">
+  <link rel="stylesheet" href="dreams.css">
+  <link rel="stylesheet" href="fx.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="index.html">TEAM LOGAN</a>
+      <nav aria-label="Main"><ul><li><a href="index.html#maze">The Maze</a></li><li><a href="team.html">Rings</a></li><li><a href="index.html#paths">Paths</a></li><li><a href="dreams.html" aria-current="page">Dreams</a></li><li><a href="cornerstone.html">Cornerstone</a></li></ul></nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">Dreams</p>
+        <h1>The Dreams</h1>
+        <p class="lede">Images the team has made and dreamed. Each one gets a plate here and a few words from us.</p>
+      </div>
+    </section>
+
+    <section class="dream dream-1" id="dream-1" aria-labelledby="d1-heading">
+      <div class="wrap">
+        <p class="eyebrow">Dream I</p>
+        <h2 id="d1-heading">The Creation</h2>
+        <p class="lede">Drag the divider, use the arrow keys, or press the button and watch the painting dream.</p>
+
+        <figure class="reveal-fig">
+          <div class="reveal" id="reveal" style="--pos:50%">
+            <img class="reveal-base" src="images/creation-base.jpg" width="1150" height="522" alt="Michelangelo's Creation of Adam: God reaching toward Adam, fingers almost touching.">
+            <img class="reveal-dream" src="images/deepdream.jpg" width="1150" height="521" alt="The same painting after DeepDream: the figures and sky are covered in swirling neuron-like branching patterns.">
+            <span class="reveal-tag tag-before" aria-hidden="true">Before</span>
+            <span class="reveal-tag tag-after" aria-hidden="true">After</span>
+            <div class="reveal-handle" id="handle" role="slider" tabindex="0" aria-label="Before and after divider" aria-orientation="horizontal" aria-valuemin="25" aria-valuemax="75" aria-valuenow="50" aria-valuetext="50 percent original painting">
+              <span class="grip" aria-hidden="true"></span>
+            </div>
+          </div>
+          <div class="reveal-bar">
+            <button type="button" class="btn dream-btn" id="dream-it">Dream it</button>
+            <span class="hint">Arrow keys move the divider. Home and End jump to the edges.</span>
+          </div>
+          <figcaption class="credits">
+            <p>Base image: <cite>The Creation of Adam</cite> by Michelangelo, public domain, via Wikimedia Commons.</p>
+            <p>Style image: &ldquo;neurons (Brainbow)&rdquo; by Stephen J Smith, CC BY 3.0, via Wikimedia Commons.</p>
+          </figcaption>
+        </figure>
+
+        <div class="d1-side">
+          <figure class="style-fig">
+            <img src="images/style-neurons.jpg" alt="Brainbow neurons: branching, brightly colored nerve cells on a dark background." loading="lazy">
+            <figcaption>the style it dreamed with</figcaption>
+          </figure>
+          <p class="slot">[How we made it, written by the team]</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="dream dream-2" id="dream-2" aria-labelledby="d2-heading">
+      <div class="wrap">
+        <p class="eyebrow">Dream II</p>
+        <h2 id="d2-heading">Hegel&rsquo;s Representation of Consciousness</h2>
+        <div class="d2-grid">
+          <figure class="loupe-fig">
+            <div class="loupe" id="loupe" tabindex="0" aria-label="Hegel image. Use the Zoom button, or press Enter, to magnify; arrow keys scroll when zoomed.">
+              <img id="loupe-img" src="images/hegel-consciousness.jpg" width="260" height="604" alt="An engraving-style spiral tower. Rising from a maze-patterned floor, its bands show figures: a seated figure at the base, two figures facing each other, two fighting, a figure at labor, a seated figure in chains, and at the top a large face.">
+              <span class="lens" id="lens" aria-hidden="true"></span>
+            </div>
+            <div class="loupe-bar">
+              <button type="button" class="btn" id="zoom-btn" aria-pressed="false">Zoom</button>
+              <span class="hint">Hover to magnify. On touch, tap the image to zoom.</span>
+            </div>
+          </figure>
+          <div class="d2-text">
+            <p class="slot">[What this image shows about Hegel, written by the team]</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dream dream-3" id="dream-3" aria-labelledby="d3-heading">
+      <div class="wrap">
+        <p class="eyebrow">Dream III and beyond</p>
+        <h2 id="d3-heading">Not yet dreamed</h2>
+        <ul class="frames">
+          <li class="frame"><span class="frame-lock" aria-hidden="true"></span><b>Dream III</b><small>not yet dreamed</small></li>
+          <li class="frame"><span class="frame-lock" aria-hidden="true"></span><b>Dream IV</b><small>not yet dreamed</small></li>
+          <li class="frame"><span class="frame-lock" aria-hidden="true"></span><b>Dream V</b><small>not yet dreamed</small></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="foot-paths">Paths: <a href="ian.html">Ian</a> · <a href="kaylee.html">Kaylee</a> · <a href="neve.html">Neve</a> · <a href="aaron.html">Aaron</a> · <a href="noah.html">Noah</a> · <a href="jonah.html">Jonah</a></p>
+      <p>Team Logan · HP 241: Philosophy of Mind through Westworld · Fall 2026</p>
+    </div>
+  </footer>
+  <script src="dreams.js"></script>
+  <script src="fx.js"></script>
+</body>
+</html>

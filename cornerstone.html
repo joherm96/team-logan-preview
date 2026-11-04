@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cornerstone — Team Logan</title>
+  <meta name="description" content="A map of the course's thinkers, where the team's builds cite them, and the full bibliography.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="maze.css">
+  <link rel="stylesheet" href="paths.css">
+  <link rel="stylesheet" href="dreams.css">
+  <link rel="stylesheet" href="fx.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="top">
+    <div class="wrap top-in">
+      <a class="brand" href="index.html">TEAM LOGAN</a>
+      <nav aria-label="Main"><ul><li><a href="index.html#maze">The Maze</a></li><li><a href="team.html">Rings</a></li><li><a href="index.html#paths">Paths</a></li><li><a href="dreams.html">Dreams</a></li><li><a href="cornerstone.html" aria-current="page">Cornerstone</a></li></ul></nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">Cornerstone</p>
+        <h1>The Cornerstone</h1>
+        <p class="lede">The course&rsquo;s thinkers, laid out as a path spiralling inward like the maze, and where our builds lean on them.</p>
+      </div>
+    </section>
+
+    <section class="cs-map" id="map-sec" aria-labelledby="map-heading">
+      <div class="wrap">
+        <h2 id="map-heading" class="sr-only" style="position:absolute;left:-9999px">Map of thinkers</h2>
+        <div class="cs-grid">
+          <div class="map-wrap">
+            <svg id="map" class="map-svg" viewBox="0 0 760 760" role="group" aria-label="Spiral map of the course's thinkers, outer edge to center"></svg>
+            <ol id="map-list" class="map-list" aria-label="The course's thinkers in order"></ol>
+            <p class="map-key" aria-hidden="true"><span class="k-lit">cited in a build</span><span class="k-extra">also cited</span></p>
+          </div>
+          <aside id="panel" class="panel" tabindex="-1" aria-live="polite" aria-label="Thinker details"></aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="cs-bib" id="bib" aria-labelledby="bib-heading">
+      <div class="wrap">
+        <p class="eyebrow">Bibliography</p>
+        <h2 id="bib-heading">Everything we cite from</h2>
+        <div class="bib-tools">
+          <label for="bib-q">Filter entries</label>
+          <input id="bib-q" type="search" autocomplete="off" placeholder="author, title, year">
+          <span id="bib-count" role="status"></span>
+        </div>
+        <p id="bib-none" hidden>No entries match that search.</p>
+        <ul class="bib-list" id="bib-list">
+          <li>Aristotle. Topics. C. 330 BCE. Metaphysics. C. 350 BCE. The Basic Works of Aristotle. Ed. Richard McKeon. New York: Random House, 1941.</li>
+          <li>Augustine of Hippo, Saint. Confessiones. 398. Trans. F. J. Sheed. The Confessions of St. Augustine. New York: Sheed &amp; Ward, 1943.</li>
+          <li>Baars, Bernard J. “The Global Workspace Theory of Consciousness Predictions and Results.” The Blackwell Companion to Consciousness. Eds. Susan Schneider and Max Velmans. 2nd edn. Oxford: B. Blackwell, 2017. 229-42</li>
+          <li>The Bhagavad Gita: Krishna’s Counsel in Time of War. Trans. Barbara Stoler Miller. New York: Bantam, 1986.</li>
+          <li>The Bhagavad Gita. Trans. Shri Purohit Swami. New York: Vintage 1977.</li>
+          <li>Bloom, Paul. “Being in Time: How Much Should We Value the Past, Present, and Future.” New Yorker, 9 July 2021.</li>
+          <li>Chomsky, Noam. Interview in Is the Man Who Is Tall Happy? Michel Gondry. 2013.</li>
+          <li>Dennett, Daniel. Consciousness Explained. Boston: Little, Brown &amp; Co, 1991.</li>
+          <li>Descartes, René. Meditations. 1641. The Philosophical Writings. 3 vols. Trans. John Cottingham, Robert Stoothoff, and Dugald Murdoch. Cambridge: Cambridge University Press, 1985.</li>
+          <li>Elias, Norbert. Die höfische Gesellschaft. 1933. Frankfurt: Suhrkamp, 1983. The Court Society. Trans. Edmund Jephcott. New York: Pantheon, 1969; Dublin: University College Dublin Press, 2006.</li>
+          <li>-----------. Die Gesellschaft des Individuen. 1939. Frankfurt: Suhrkamp, 1987. The Society of Individuals. Trans. Edmund Jephcott. Oxford: B. Blackwell, 1991.</li>
+          <li>-----------, with Dunning, Eric. The Quest for Excitement: Sport and Leisure in the Civilizing Process. Oxford: Blackwell, 1986.</li>
+          <li>Fanon, Frantz. Peau noire, masques blancs. Paris: Seuil, 1952. Trans. Charles Lam Markmann. Black Skin, White Masks. New York: Grove, 1967.</li>
+          <li>-----------. Les Damnés de la terre. Paris: F. Maspero, 1961. Trans. Constance Farrington. The Wretched of The Earth. Preface by Jean-Paul Sartre. New York: Grove, 1963.</li>
+          <li>Gell, Alfred. Art and Agency: An Anthropological Theory. Oxford: Clarendon Press; New York: Oxford University Press, 1989.</li>
+          <li>Halligan, Peter &amp; Oakley, David A. "What If Consciousness Is Just a Product of Our Non-Conscious brain?” The Conversation, 20 December 2018.</li>
+          <li>Hegel, Georg Wilhelm Friedrich. Phänomenologie des Geistes. Bamberg and Würzburg: J. A. Goebhardt, 1807. Trans. Terry Pinkard. The Phenomenology of Spirit. Cambridge: Cambridge University Press, 2019. Trans. A.V. Miller. Hegel’s Phenomenology of Spirit. Oxford: Oxford Univiersity Press, 1976.</li>
+          <li>Horn, Tina. “What the Rape Scenes in Westworld Say about Rape Culture.” Refinery 29, 4 December 2016.</li>
+          <li>Huxley, Thomas H. “On the Hypothesis That Animals Are Automata, and Its History.” Fortnightly Review 16 (1874): 555-80.</li>
+          <li>Iacoboni, Marco. Mirroring People: The New Science of How We Connect with Others. New York: Farrar, Strauss, and Giroux, 2008.</li>
+          <li>Jackson, Frank. “Epiphenomenal Qualia.” Philosophical Quarterly 32 (1982): 127–36.</li>
+          <li>Jaynes, Julian. The Origin of Consciousness in the Breakdown of the Bicameral Mind. Boston: Houghton Mifflin, 1976.</li>
+          <li>Kalfrin, Valerie. “Westworld and the Power of Repetition.” Final Draft, 2 December 2016.</li>
+          <li>Kant, Immanuel. “Conjectural Beginning of Human History.” 1786. Toward Perpetual Peace and Other Writings. Ed. Pauline Kleingeld. New Haven: Yale University Press, 2006.</li>
+          <li>Larmore, Charles. Les Pratiques du moi. Paris: PUF, 2004. Trans. Sharon Bowman. The Practices of the Self. Chicago: University of Chicago Press, 2010.</li>
+          <li>Lemoine, Blake. “Is LaMDA Sentient? An Interview,” The Medium, 11 June 2022.</li>
+          <li>Libet, B., Gleason, C. A.. Wright, E. W., &amp; Pearl, D. K. “Time of Conscious Intention To Act in Relation to Onset of Cerebral Activities (Readiness-Potential); The Unconscious Initiation of a Freely Voluntary Act.” Brain 106 (1983): 623-42.</li>
+          <li>Lucretius, Titus Carus. De rerum matura. 54 BCE. Trans. William Henry Denham Rouse. On the Nature of Things. Cambridge, MA: Harvard University Press, 1924.</li>
+          <li>Manassi, Mauro, and Whitney, David. “Illusion of visual stability through active perceptual serial dependence.” Science Advances 8: 2, 12 January 2022.</li>
+          <li>Milton, John. Paradise Lost. 1667. Ed. Gordon Teskey. New York, W. W. Norton, 2005.</li>
+          <li>Montaigne, Michel de. Essays. 1580/1588/1592. Trans. Donald Frame. The Complete Works of Montaigne. 1943. Stanford: Stanford University Press, 1958.</li>
+          <li>Nagel, Thomas, “What Is It Like To Be a Bat?” The Philosophical Review 83: 4 (1974), 435-50.</li>
+          <li>Niedenthal, P.M., Brauer, M., Halberstadt, J.B., &amp; Innes-Ker, A.H. “When Did Her Smile Drop? Facial Mimicry and the Influences of Emotional State on the Detection of Change in Emotional Expression.” Cognition and Emotion 15 (2001): 853-64.</li>
+          <li>Nietzsche, Friedrich. Beyond Good and Evil. New York: Vintage, 1984.</li>
+          <li>Nolan, Christopher, dir., and Nolan, Jonathan, screenplay. Memento. Produced by Suzanne Todd and Jennifer Todd. Summit entertainment, 2000.</li>
+          <li>Parfit, Derek. Reasons and Persons. Oxford: Oxford University Press, 1986.</li>
+          <li>Plato. Republic. C. 380 BCE. Trans. C. D. C. Reeve. Indianapolis, IN: Hackett, 2004.</li>
+          <li>-----------. Phaedo. C. 347 BCE. Tran. G. M. A. Grube. 2nd edn. Indianapolis, IN: Hackett, 1977.</li>
+          <li>Plutarchus, Lucius Mestrius. Moralia. 95. Trans. Donald Russell. Selected Essays and Dialogues. Oxford: Oxford University Press, 1993.</li>
+          <li>Porter, Jon. “Google suspends engineer who claims its AI is sentient.” The Verge, 13 June 2022.</li>
+          <li>Ramachandran, V.S. The Tell-Tale Brain: A Neuroscientist’s Quest for What Makes Us Human. New York: W.W. Norton, 2011.</li>
+          <li>Reid, Thomas. The Works of Thomas Reid, D.D.: Now Fully Collected, with Selections from His Unpublished Letters. Ed. T. Reid, W. Hamilton, and D. Stewart. Edinburgh: Maclachlan and Stewart, 1846.</li>
+          <li>Riesman, Abraham. "Westworld Creators Reveal Whether Maeve Is in Control When She Gets Off the Train." Vulture, 6 December 2016.</li>
+          <li>Rothman, Joshua. “Are We Already Living in Virtual Reality?” The New Yorker. April 2, 2018.</li>
+          <li>Scarry, Elaine. The Body in Pain: the Making and Unmaking of the World. Oxford: Oxford University Press, 1985.</li>
+          <li>Schopenhauer, Arthur. “Preisschrift über die Freiheit des Willens.” 1839. Trans. Eric F. J. Payne. Prize Essay on the Freedom of the Will. Cambridge: Cambridge University Press, 1999.</li>
+          <li>Schurger, Aaron. “The Neuropsychology of Conscious Volition.” The Blackwell Companion to Consciousness. Eds. Susan Schneider and Max Velmans. 2nd edn. Oxford: B. Blackwell, 2017. 695-710.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="foot-paths">Paths: <a href="ian.html">Ian</a> · <a href="kaylee.html">Kaylee</a> · <a href="neve.html">Neve</a> · <a href="aaron.html">Aaron</a> · <a href="noah.html">Noah</a> · <a href="jonah.html">Jonah</a></p>
+      <p>Team Logan · HP 241: Philosophy of Mind through Westworld · Fall 2026</p>
+    </div>
+  </footer>
+  <script src="cornerstone.js"></script>
+  <script src="fx.js"></script>
+</body>
+</html>

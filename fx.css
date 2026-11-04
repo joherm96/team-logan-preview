@@ -1,0 +1,112 @@
+/* fx: site-wide effects layer (analysis mode, easter eggs, reveries, player piano, page transitions) */
+
+/* ---- 5. Page transitions ---- */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+@supports not (view-transition-name: none) {
+  body { animation: fx-pagein .28s ease-out both; }
+}
+@keyframes fx-pagein { from { opacity: .001; } to { opacity: 1; } }
+
+/* ---- Dock (fixed buttons) ---- */
+.fx-dock { position: fixed; right: .7rem; bottom: .7rem; z-index: 60; display: flex; gap: .4rem; align-items: stretch; }
+.fx-btn {
+  font: 500 .68rem/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase;
+  color: #cfe6ff; background: rgb(10 22 38 / .82); border: 1px solid rgb(140 190 240 / .55);
+  padding: .5rem .6rem; border-radius: .2rem; cursor: pointer; opacity: .72;
+  display: inline-flex; align-items: center; gap: .45rem; backdrop-filter: blur(4px);
+  transition: opacity .15s, background .15s;
+}
+.fx-btn:hover, .fx-btn:focus-visible, .fx-btn[aria-pressed="true"] { opacity: 1; background: rgb(14 34 60 / .95); }
+.fx-btn:focus-visible { outline: 2px solid #8fd0ff; outline-offset: 2px; }
+.fx-btn[aria-pressed="true"] { border-color: #8fd0ff; box-shadow: 0 0 0 1px rgb(143 208 255 / .25), 0 0 12px rgb(143 208 255 / .3); }
+@media (max-width: 480px) { .fx-dock { right: .4rem; bottom: .4rem; } .fx-btn { font-size: .6rem; padding: .45rem .5rem; } }
+
+/* piano roll strip inside the button */
+.fx-roll { display: none; width: 1.7rem; height: .7rem; position: relative; overflow: hidden; border-left: 1px solid rgb(143 208 255 / .4); border-right: 1px solid rgb(143 208 255 / .4); }
+.fx-btn.fx-playing .fx-roll { display: inline-block; }
+.fx-roll i { position: absolute; height: 2px; background: #8fd0ff; border-radius: 1px; animation: fx-roll 1.6s linear infinite; left: 100%; }
+.fx-roll i:nth-child(1) { top: 1px; width: 7px; animation-delay: 0s; }
+.fx-roll i:nth-child(2) { top: 4px; width: 4px; animation-delay: -.5s; }
+.fx-roll i:nth-child(3) { top: 7px; width: 9px; animation-delay: -1s; }
+.fx-roll i:nth-child(4) { top: 10px; width: 5px; animation-delay: -.25s; }
+@keyframes fx-roll { from { transform: translateX(0); } to { transform: translateX(-3rem); } }
+
+/* ---- 1. Analysis mode ---- */
+.fx-readout { display: none; }
+html.fx-analysis {
+  --r0: #e9f2fb; --r1: #c3d8ec; --r2: #7fa6c9; --r3: #4a6d8f; --r4: #2b4766; --r5: #1b3047; --r6: #0f2034; --r7: #08131f;
+  --gold: #7fd0ff; --ox: #1f5f93; --ink: #0c1b2b; --bone: #eef6ff;
+  --body: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --fell: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --fellsc: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --slab: ui-sans-serif, system-ui, "Helvetica Neue", Arial, sans-serif;
+}
+html.fx-analysis body { font-size: .98rem; }
+html.fx-analysis body::before {
+  content: ""; position: fixed; inset: 0; z-index: 40; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgb(120 180 240 / .07) 0 1px, transparent 1px 3px),
+    linear-gradient(rgb(120 180 240 / .09) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgb(120 180 240 / .09) 1px, transparent 1px) 0 0 / 48px 48px;
+}
+html.fx-analysis .hero, html.fx-analysis .top { background-image: none; }
+html.fx-analysis .hero { background: linear-gradient(#f2f8ff, var(--r0)); }
+html.fx-analysis .top { background: rgb(233 242 251 / .93); }
+html.fx-analysis .plate, html.fx-analysis .plate-dark { background: #dbe9f6; border-color: var(--r2); }
+html.fx-analysis img { filter: saturate(.35) hue-rotate(170deg) brightness(1.02); }
+html.fx-analysis .rev:nth-child(n+4) article { background: #12263b; }
+
+.fx-readout {
+  font: 500 .72rem/1.4 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .06em; text-transform: uppercase;
+  background: #08131f; color: #9fd8ff; padding: .45rem 1rem; border-bottom: 1px solid #1f5f93; position: relative; z-index: 6;
+}
+html.fx-analysis .fx-readout { display: block; }
+.fx-readout b { color: #fff; font-weight: 500; }
+
+/* annotations */
+html.fx-analysis [data-fx-tag] { position: relative; }
+html.fx-analysis [data-fx-tag]::before {
+  content: attr(data-fx-tag); white-space: pre-line; display: block; margin: 0 0 .4rem;
+  font: 500 .68rem/1.35 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: .06em; text-transform: uppercase;
+  color: #0c3c63; background: rgb(127 208 255 / .22); border-left: 3px solid #1f9be0; padding: .3rem .5rem; max-width: 100%;
+  font-style: normal; text-align: left;
+}
+html.fx-analysis .dark [data-fx-tag]::before, html.fx-analysis .dark[data-fx-tag]::before { color: #cdeaff; background: rgb(127 208 255 / .14); }
+@media (min-width: 1180px) {
+  html.fx-analysis .essay p[data-fx-tag]::before {
+    position: absolute; left: calc(100% + 1.2rem); top: .2rem; width: 10rem; margin: 0;
+  }
+}
+
+/* ---- 2. Easter egg overlays ---- */
+.fx-egg { position: fixed; inset: 0; z-index: 100; pointer-events: none; display: grid; place-items: center; padding: 1.5rem; opacity: 0; transition: opacity .8s ease; background: rgb(8 4 2 / .86); }
+.fx-egg.fx-on { opacity: 1; }
+.fx-egg-text { font: italic 400 clamp(1.5rem, 5vw, 3.2rem)/1.25 var(--fell, "IM Fell English", Georgia, serif); color: #f4ead6; text-align: center; max-width: 36rem; text-shadow: 0 0 22px rgb(232 165 60 / .55); min-height: 2.5em; }
+.fx-egg-lamp { position: absolute; left: 50%; top: 22%; width: 7rem; height: 7rem; margin-left: -3.5rem; border-radius: 50%; background: radial-gradient(circle, #fff1cf 0%, #ffd58a 25%, rgb(232 165 60 / 0) 70%); opacity: 0; transform: scale(.4); }
+.fx-egg.fx-flare .fx-egg-lamp { animation: fx-flare 1.6s ease-out forwards; }
+@keyframes fx-flare { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: 1; transform: scale(2.6); } 100% { opacity: .35; transform: scale(1.2); } }
+.fx-egg.fx-small { background: rgb(8 4 2 / .6); }
+.fx-egg.fx-small .fx-egg-text { font-size: clamp(1.3rem, 4vw, 2.2rem); }
+
+/* ---- 3. Reveries glitch-in ---- */
+html.fx-rev .rev article:not(.fx-in) { opacity: 0; }
+html.fx-rev .rev article.fx-glitch { animation: fx-glitch .7s steps(1, end) both; }
+@keyframes fx-glitch {
+  0%   { opacity: 0; transform: translateX(0); text-shadow: none; }
+  14%  { opacity: .85; transform: translateX(-6px); text-shadow: 2px 0 rgb(255 60 60 / .55), -2px 0 rgb(60 140 255 / .55); }
+  28%  { opacity: .15; transform: translateX(4px); text-shadow: -2px 0 rgb(255 60 60 / .5), 2px 0 rgb(60 140 255 / .5); }
+  44%  { opacity: .95; transform: translateX(-3px); text-shadow: 2px 0 rgb(255 60 60 / .45), -2px 0 rgb(60 140 255 / .45); }
+  60%  { opacity: .5; transform: translateX(2px); text-shadow: -1px 0 rgb(255 60 60 / .4), 1px 0 rgb(60 140 255 / .4); }
+  80%  { opacity: 1; transform: translateX(-1px); text-shadow: 1px 0 rgb(255 60 60 / .25), -1px 0 rgb(60 140 255 / .25); }
+  100% { opacity: 1; transform: none; text-shadow: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .fx-roll i { animation: none; left: 20%; }
+  .fx-egg { transition: none; }
+  .fx-egg.fx-flare .fx-egg-lamp { animation: none; opacity: .6; transform: scale(1.4); }
+  html.fx-rev .rev article:not(.fx-in) { opacity: 1; }
+}

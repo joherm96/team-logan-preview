@@ -1,0 +1,48 @@
+/* The walkable maze: lamp token, seals, hints. Ring/wall base styles live in styles.css. */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.maze-wrap { min-width: 0; }
+.maze-svg { touch-action: pan-y; }
+.maze-svg:focus { outline: none; }
+.maze-svg:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 50%; }
+
+.maze-hint { margin: .9rem 0 0; text-align: center; font: italic 400 1.05rem var(--fell); color: var(--r6); }
+.maze-tools { display: flex; flex-wrap: wrap; gap: .6rem 1rem; justify-content: center; align-items: center; margin-top: .6rem; }
+.maze-reset { font: 400 .98rem var(--fellsc); letter-spacing: .04em; color: var(--bone); background: var(--r7); border: 1px solid var(--r5); border-radius: .2rem; padding: .5rem .95rem; min-height: 2.5rem; cursor: pointer; }
+.maze-reset:hover { background: var(--r6); border-color: var(--gold); }
+.maze-reset:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.maze-preview { font-size: .88rem; color: var(--ox); }
+.maze-preview a { color: var(--ox); }
+
+/* the lamp */
+.lamp-token { cursor: grab; }
+.lamp-token.held { cursor: grabbing; }
+.lamp-hit { fill: transparent; touch-action: none; }
+.lamp-glow { pointer-events: none; animation: lampPulse 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.lamp-core { fill: #ffe2a3; stroke: #b8741c; stroke-width: 1; pointer-events: none; filter: drop-shadow(0 0 3px #ffbf4d); }
+.lamp-body { pointer-events: none; }
+.lamp-body.shake { animation: lampShake .42s ease-in-out; }
+@keyframes lampPulse { 0%, 100% { opacity: .8; transform: scale(.92); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes lampShake { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-3.5px, 0); } 40% { transform: translate(3.5px, 0); } 60% { transform: translate(-2.5px, 0); } 80% { transform: translate(2px, 0); } }
+
+/* a ring that was just entered */
+.ring.lit { animation: ringLit 1.1s ease-out; }
+@keyframes ringLit { 0% { filter: brightness(1.75) saturate(1.3); } 100% { filter: brightness(1); } }
+
+/* shut door across a gap that leads into a ring not yet reached */
+.seal { fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-dasharray: 2.5 3; stroke-linecap: round; opacity: .55; pointer-events: none; }
+
+/* center: opens once Build 8 is reached */
+.center-glow { pointer-events: none; animation: lampPulse 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.ring.open { fill: #2a1a0b; }
+.flare { fill: none; stroke: #ffd58a; stroke-width: 6; opacity: 0; pointer-events: none; transform-box: fill-box; transform-origin: center; }
+.flare.go { animation: flare 1.4s ease-out; }
+@keyframes flare { 0% { opacity: .95; transform: scale(.4); stroke-width: 14; } 100% { opacity: 0; transform: scale(6); stroke-width: 1; } }
+
+@media (max-width: 560px) {
+  .maze-hint { font-size: .98rem; padding-inline: .5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lamp-glow, .center-glow { animation: none; }
+  .lamp-body.shake, .flare.go, .ring.lit { animation: none; }
+  .ring.lit { filter: brightness(1.4); }
+}
