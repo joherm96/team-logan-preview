@@ -92,3 +92,17 @@
   .mini i::after { height: calc(var(--v, 0) * 100%); }
   .path-card, .path-card:hover, .path-card:focus-visible { transform: none; --rx: 0deg; --ry: 0deg; }
 }
+
+/* Full builds on a Path page (one per row, expandable) */
+.build-list.essays { grid-template-columns: 1fr; max-width: 50rem; }
+.essay-card .build-kind { margin: -.4rem 0 .6rem; font: italic 400 1.1rem/1.35 var(--fell); color: var(--r3); }
+.essay-card .build-lead { margin: 0 0 .9rem; font: italic 400 1.2rem/1.45 var(--fell); }
+.build-full summary { display: inline-block; cursor: pointer; font: 400 1rem var(--fellsc); color: var(--r7); background: var(--gold); padding: .4rem .9rem; border-radius: .2rem; list-style: none; }
+.build-full summary::-webkit-details-marker { display: none; }
+.build-full[open] summary { background: transparent; color: var(--ox); border: 1px solid var(--ox); }
+.build-full[open] summary::after { content: " (close)"; }
+.build-text { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--r1); }
+.build-text p { margin: 0 0 1rem; line-height: 1.7; }
+.build-passage { margin: 0 0 1.3rem; padding: .9rem 1.1rem; background: rgb(207 180 138 / .25); border-left: 3px solid var(--gold); font: italic 400 1.02rem/1.6 var(--fell); }
+.bp-label { display: block; margin-bottom: .4rem; font: 400 .9rem var(--fellsc); font-style: normal; color: var(--ox); letter-spacing: .05em; }
+.team-card .more { color: var(--ox); }

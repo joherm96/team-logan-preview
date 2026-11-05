@@ -32,7 +32,12 @@ var UNITS = [
       { name: 'Frantz Fanon', work: 'Black Skin, White Masks (1952)' }],
     cites: [
       { build: 2, who: 'team', thinker: 'Hegel', text: 'Phenomenology of Spirit §167, §181, §187, §192-193 (and §195)', href: 'team.html#build-2' },
-      { build: 2, who: 'team', thinker: 'Fanon', text: 'Black Skin, White Masks §222', href: 'team.html#build-2' }] },
+      { build: 2, who: 'team', thinker: 'Fanon', text: 'Black Skin, White Masks §222', href: 'team.html#build-2' },
+      { build: 1, who: 'Jonah', thinker: 'Hegel', text: 'Phenomenology of Spirit §187, §189, §193, §194, §195, §196', href: 'jonah.html#build-1' },
+      { build: 3, who: 'Jonah', thinker: 'Hegel', text: 'Phenomenology of Spirit §190, §193, §194, §195, §196, §199', href: 'jonah.html#build-3' },
+      { build: 3, who: 'Jonah', thinker: 'Fanon', text: '(217), (220)', href: 'jonah.html#build-3' },
+      { build: 4, who: 'Jonah', thinker: 'Hegel', text: 'Phenomenology of Spirit §193, §194, §195, §196', href: 'jonah.html#build-4' },
+      { build: 4, who: 'Jonah', thinker: 'Fanon', text: '(217), (222), (225), (229), (250)', href: 'jonah.html#build-4' }] },
   { id: 'plutarch', unit: '7', short: 'Plutarch', title: 'Plutarch',
     thinkers: [{ name: 'Plutarch', work: 'Moralia (c. 95)' }], cites: [] },
   { id: 'elias', unit: '8', short: 'Elias', title: 'Elias',
