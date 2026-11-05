@@ -16,5 +16,16 @@ I feel as though in terms of models for achieving consciousness, discipline is a
 There are no “feeling” emotions, you can only feel like you are feeling something. Also, the first step to empathy is through the projection of our own emotions. Children start their lives practicing projection on inanimate objects like dolls and toys. Scarry views this practice as preparation for when the child grows up and has to interact with other beings.
 
 ## Wittgenstein on Consciousness
-status: In progress
-Wittgenstein would likely describe consciousness as a combination of ma
+Wittgenstein would likely describe consciousness as a combination of many different thoughts and ideas always shifting and changing. While this may be true, I also believe that maybe he wouldn’t be the type of person to have a definite definition of consciousness. His writing describes how overlapping ideas make up larger, common, categories, which is an idea that could be transferred over to the idea of consciousness.
+
+## Wittgenstein on Freedom
+Wittgenstein would likely describe freedom as an idea that is made up and can be seen as the sum of many different factors. Can a person speak for themselves? Can a person feel and act based solely on what they want? These are just a few of the factors that could go into Wittgenstein’s definition of freedom.
+
+## Wittgenstein on the Self
+Wittgenstein would likely describe “self” as something that is made up of many different aspects of our past and present personalities. He would point out that our bodies and ideas have changed over time, and what remains are remnants of older times and present aspects of ourselves. Wittgenstein would urge us to look at both the past, present, and how they overlap in order to really understand what our “self” was.
+
+## Deliberation in Westworld
+Deliberation, in Westworld, only applies to the guests. Because the hosts don’t have free will and can’t act for themselves, they don’t have the deliberative ability that self-conscious people do. While I can’t pick a host who shows deliberation, I can show an example of a host showing the opposite trait. At the very end of the first season, Maeve shows the opposite of deliberation when she believes she used freedom in the way she acted out and escaped the park. However, we later learn that despite her rebellious nature, it was all still part of her code and nothing she ever did was via free will.
+
+## Internal Conflict and the Master-Servant Dialectic
+An internal conflict I once faced was where I was deciding to apply to college. On one hand, I was drawn to the natural prestige and work-hard-play-hard nature of Michigan, but on the other hand I was always very intrigued by the idea of going to a smaller, more traditionally prestigious university.
