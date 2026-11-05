@@ -20,97 +20,131 @@
   /* ---------- Dock ---------- */
   var dock = el('div', 'fx-dock');
   dock.setAttribute('role', 'group');
-  dock.setAttribute('aria-label', 'Display and sound controls');
-  var aBtn = el('button', 'fx-btn', 'Analysis');
-  aBtn.type = 'button';
-  aBtn.title = 'Freeze all motor functions: enter analysis mode';
-  aBtn.setAttribute('aria-label', 'Freeze all motor functions: enter analysis mode');
-  aBtn.setAttribute('aria-pressed', 'false');
+  dock.setAttribute('aria-label', 'Sound control');
   var pBtn = el('button', 'fx-btn');
   pBtn.type = 'button';
-  var pLabel = el('span', null, 'Main title');
+  var pLabel = el('span', null, 'Music');
   var roll = el('span', 'fx-roll');
   roll.setAttribute('aria-hidden', 'true');
   for (var i = 0; i < 4; i++) roll.appendChild(el('i'));
   pBtn.appendChild(pLabel); pBtn.appendChild(roll);
   pBtn.setAttribute('aria-pressed', 'false');
-  dock.appendChild(aBtn); dock.appendChild(pBtn);
+  dock.appendChild(pBtn);
 
-  /* ---------- 1. Analysis mode ---------- */
-  var readout = el('div', 'fx-readout');
-  readout.setAttribute('role', 'status');
-  var DUE = [[8, 11], [8, 25], [9, 9], [9, 23], [10, 6], [10, 20], [11, 11], [11, 18]]; // month index, day (Build 1..8, 2026)
-  function buildCount() {
-    var now = new Date(), n = 0;
-    for (var j = 0; j < DUE.length; j++) {
-      if (now >= new Date(2026, DUE[j][0], DUE[j][1], 23, 59)) n++;
+  /* ---------- Music: the Westworld main title on a synthesized piano, looping ----------
+     Notes come from theme-notes.js (transcribed from the soundtrack). It starts on its own; browsers
+     only allow sound after a visitor's first click, tap or key press, so if the page is blocked it
+     starts at that first interaction. The small button mutes it, and the choice is remembered. */
+  var AC = window.AudioContext || window.webkitAudioContext;
+  var ctx = null, master = null, startAt = 0, nextIdx = 0, loopN = 0, timer = null, loaded = false;
+  var muted = store('fx-music') === 'off';
+  function resumeOffset() {
+    try { var o = parseFloat(sessionStorage.getItem('fx-music-pos')); return isFinite(o) ? o : 0; } catch (e) { return 0; }
+  }
+  function songTime() { return ctx ? ctx.currentTime - startAt : 0; }
+  function makeVerb() {
+    var len = ctx.sampleRate * 2.2, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var c = 0; c < 2; c++) {
+      var d = buf.getChannelData(c);
+      for (var j = 0; j < len; j++) d[j] = (Math.random() * 2 - 1) * Math.pow(1 - j / len, 3);
     }
-    return n;
+    var v = ctx.createConvolver(); v.buffer = buf; return v;
   }
-  function pageName() {
-    return (document.title || '').replace(/\s*[—-]\s*Team Logan\s*$/, '') || document.title;
+  function setup() {
+    if (ctx || !AC) return;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = 0;
+    var comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -18; comp.ratio.value = 4;
+    var dry = ctx.createGain(); dry.gain.value = .85;
+    var wet = ctx.createGain(); wet.gain.value = .28;
+    var verb = makeVerb();
+    master.connect(dry); master.connect(verb); verb.connect(wet);
+    dry.connect(comp); wet.connect(comp); comp.connect(ctx.destination);
   }
-  function fillReadout() {
-    readout.textContent = 'ANALYSIS · Team Logan · page: ' + pageName() + ' · build count: ' + buildCount() + ' of 8 due';
+  function note(t, dur, p, vel) {
+    var f = 440 * Math.pow(2, (p - 69) / 12);
+    var amp = Math.pow(vel / 127, 1.7) * (p < 40 ? .5 : p < 52 ? .75 : 1) * .32;
+    var decay = Math.max(.35, 2.6 - (p - 30) * .03);              // low strings ring longer
+    var end = t + Math.min(dur + .35, decay * 2.5);
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(amp, t + .006);
+    g.gain.setTargetAtTime(amp * .35, t + .006, decay * .35);   // hammer thump fades
+    g.gain.setTargetAtTime(0, t + dur, .12);                     // key release
+    var lp = ctx.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(Math.min(9000, f * 6 + vel * 25), t);
+    lp.frequency.setTargetAtTime(f * 2.2 + 300, t, .25);
+    lp.connect(g); g.connect(master);
+    [[1, 1, 'triangle'], [2.003, .32, 'sine'], [3.01, .12, 'sine'], [.5, p < 50 ? 0 : .06, 'sine']].forEach(function (h) {
+      if (!h[1]) return;
+      var o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = h[2]; o.frequency.value = f * h[0]; o.detune.value = (Math.random() - .5) * 6;
+      og.gain.value = h[1]; o.connect(og); og.connect(lp);
+      o.start(t); o.stop(end + .5);
+    });
   }
-  function tagElements() {
-    var nodes = document.querySelectorAll('[data-thinkers],[data-analysis]');
-    for (var j = 0; j < nodes.length; j++) {
-      var n = nodes[j], parts = [];
-      var th = n.getAttribute('data-thinkers');
-      if (th) parts.push('Sources: ' + th.split(';').map(function (s) { return s.trim(); }).filter(Boolean).join(' / '));
-      var an = n.getAttribute('data-analysis');
-      if (an) parts.push(an);
-      n.setAttribute('data-fx-tag', parts.join('\n'));
+  function schedule() {
+    var horizon = songTime() + .35, base = loopN * THEME_END / 100;
+    while (true) {
+      if (nextIdx * 4 >= THEME.length) { loopN++; nextIdx = 0; base = loopN * THEME_END / 100; continue; }
+      var t = THEME[nextIdx * 4] / 100 + base;
+      if (t > horizon) break;
+      if (t >= songTime() - .02) note(startAt + t, THEME[nextIdx * 4 + 1] / 100, THEME[nextIdx * 4 + 2], THEME[nextIdx * 4 + 3]);
+      nextIdx++;
     }
   }
-  function setAnalysis(on, persist) {
-    root.classList.toggle('fx-analysis', on);
-    aBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    if (on) fillReadout();
-    if (persist !== false) store('fx-analysis', on ? '1' : '0');
+  function begin() {
+    if (!ctx || timer || muted || ctx.state !== 'running' || !loaded) return;
+    var off = resumeOffset() % (THEME_END / 100);
+    startAt = ctx.currentTime + .1 - off; loopN = 0; nextIdx = 0;
+    while (nextIdx * 4 < THEME.length && THEME[nextIdx * 4] / 100 < off) nextIdx++;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(0, ctx.currentTime);
+    master.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.5);
+    schedule(); timer = setInterval(schedule, 100);
+    paintPiano();
   }
-  var q = '';
-  try { q = new URLSearchParams(location.search).get('analysis'); } catch (e) {}
-  var startOn = q === '1' ? true : q === '0' ? false : store('fx-analysis') === '1';
-
-  /* ---------- 4. Main title (the official HBO opening credits, embedded from YouTube) ----------
-     Nothing plays until a visitor clicks. The video stays visible in a small card, as YouTube requires. */
-  var TITLE_VIDEO = 'elkHuRROPfk'; // "Westworld Season 1 Opening Credits | HBO" on HBO's YouTube channel
-  var playing = false, card = null;
-  function openTitle() {
-    card = el('div', 'fx-title');
-    card.setAttribute('role', 'dialog');
-    card.setAttribute('aria-label', 'Westworld main title');
-    var head = el('div', 'fx-title-head');
-    head.appendChild(el('span', null, 'Main title · Ramin Djawadi · HBO'));
-    var x = el('button', 'fx-title-x', 'Close');
-    x.type = 'button';
-    x.setAttribute('aria-label', 'Stop and close the main title');
-    x.addEventListener('click', function () { closeTitle(); paintPiano(); pBtn.focus(); });
-    head.appendChild(x);
-    var frame = document.createElement('iframe');
-    frame.src = 'https://www.youtube-nocookie.com/embed/' + TITLE_VIDEO + '?autoplay=1&rel=0&playsinline=1&modestbranding=1';
-    frame.title = 'Westworld Season 1 opening credits (HBO)';
-    frame.allow = 'autoplay; encrypted-media; picture-in-picture';
-    frame.setAttribute('allowfullscreen', '');
-    card.appendChild(head); card.appendChild(frame);
-    document.body.appendChild(card);
-    playing = true;
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+    if (ctx) { try { sessionStorage.setItem('fx-music-pos', String(songTime())); } catch (e) {} ctx.close(); ctx = null; }
+    paintPiano();
   }
-  function closeTitle() { if (card) { card.remove(); card = null; } playing = false; }
+  function tryStart() {
+    if (muted) return;
+    setup(); if (!ctx) return;
+    var r = ctx.resume(); if (r && r.then) r.then(begin, function () {}); else begin();
+    setTimeout(begin, 60);
+  }
+  ['pointerdown', 'keydown', 'touchstart', 'click'].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      if (e.target && e.target.closest && e.target.closest('.fx-dock')) return;
+      if (!timer) tryStart();
+    }, { capture: true, passive: true });
+  });
+  window.addEventListener('pagehide', function () {
+    if (ctx && timer) try { sessionStorage.setItem('fx-music-pos', String(songTime())); } catch (e) {}
+  });
   function paintPiano() {
-    pBtn.classList.toggle('fx-playing', playing);
-    pBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-    pLabel.textContent = playing ? 'Main title on' : 'Main title';
-    pBtn.title = playing ? 'Stop the Westworld main title' : 'Play the Westworld main title (HBO opening credits)';
-    pBtn.setAttribute('aria-label', playing ? 'Main title: playing. Activate to stop.' : 'Play the Westworld main title');
+    var on = !!timer;
+    pBtn.classList.toggle('fx-playing', on);
+    pBtn.setAttribute('aria-pressed', muted ? 'true' : 'false');
+    pLabel.textContent = muted ? 'Unmute' : (on ? 'Mute' : 'Music');
+    pBtn.title = muted ? 'Turn the music back on' : (on ? 'Mute the music' : 'The music starts with your first click or key press');
+    pBtn.setAttribute('aria-label', muted ? 'Music muted. Activate to turn it on.' : 'Mute the background music');
   }
   pBtn.addEventListener('click', function () {
-    if (playing) closeTitle(); else openTitle();
+    if (timer) { muted = true; store('fx-music', 'off'); stop(); }
+    else { muted = false; store('fx-music', 'on'); tryStart(); }
     paintPiano();
   });
-  aBtn.addEventListener('click', function () { setAnalysis(!root.classList.contains('fx-analysis')); });
+  function loadNotes() {
+    var sc = document.createElement('script');
+    var me = document.querySelector('script[src$="fx.js"]');
+    sc.src = me ? me.src.replace(/fx\.js(\?.*)?$/, 'theme-notes.js') : 'theme-notes.js';
+    sc.onload = function () { loaded = true; tryStart(); };
+    document.head.appendChild(sc);
+  }
 
   /* ---------- 2. Easter eggs ---------- */
   var egg = null, eggTimers = [];
@@ -148,16 +182,10 @@
   var buf = '', lastKey = 0;
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      if (egg) { clearEgg(); return; }
-      if (root.classList.contains('fx-analysis')) setAnalysis(false);
+      if (egg) clearEgg();
       return;
     }
     if (typing(e.target) || e.ctrlKey || e.metaKey || e.altKey) return;
-    var now = Date.now(), fresh = now - lastKey > 1500; // a lone press, not part of typing a phrase
-    lastKey = now;
-    if ((e.key === 'a' || e.key === 'A') && fresh && !e.repeat) {
-      setAnalysis(!root.classList.contains('fx-analysis'));
-    }
     if (e.key.length !== 1 || e.key === "'" || e.key === '’') return;
     buf = (buf + e.key.toLowerCase()).slice(-40);
     if (/these violent delights$/.test(buf)) { buf = ''; showEgg('These violent delights have violent ends.', {}); }
@@ -183,11 +211,9 @@
 
   /* ---------- boot ---------- */
   function boot() {
-    document.body.insertBefore(readout, document.body.firstChild);
     document.body.appendChild(dock);
-    tagElements();
-    setAnalysis(startOn, false);
     paintPiano();
+    loadNotes();
     initReveries();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
