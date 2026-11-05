@@ -28,7 +28,7 @@
   aBtn.setAttribute('aria-pressed', 'false');
   var pBtn = el('button', 'fx-btn');
   pBtn.type = 'button';
-  var pLabel = el('span', null, 'Player piano');
+  var pLabel = el('span', null, 'Main title');
   var roll = el('span', 'fx-roll');
   roll.setAttribute('aria-hidden', 'true');
   for (var i = 0; i < 4; i++) roll.appendChild(el('i'));
@@ -74,102 +74,40 @@
   try { q = new URLSearchParams(location.search).get('analysis'); } catch (e) {}
   var startOn = q === '1' ? true : q === '0' ? false : store('fx-analysis') === '1';
 
-  /* ---------- 4. Player piano (public domain: Scott Joplin, The Entertainer, 1902; written out by hand, approximate) ---------- */
-  // Grid of sixteenths, 8 per bar (2/4). Notes: [midi-ish name, length in sixteenths]; null = rest.
-  var N = { C4: 60, 'C#4': 61, D4: 62, 'D#4': 63, E4: 64, F4: 65, G4: 67, A4: 69, B4: 71, C5: 72, 'C#5': 73, D5: 74, 'D#5': 75, E5: 76, F5: 77, 'F#5': 78, G5: 79 };
-  var PICK = [['D4', 1], ['D#4', 1], ['E4', 1]];
-  var MEL = [
-    [['C5', 4], ['E4', 2], ['C5', 2]],
-    [['E4', 2], ['C5', 6]],
-    [['C5', 2], ['D5', 2], ['D#5', 2], ['E5', 2]],
-    [['C5', 2], ['D5', 2], ['E5', 4]],
-    [['B4', 2], ['D5', 6]],
-    [['C5', 4], [null, 1]].concat(PICK),
-    [['C5', 4], ['E4', 2], ['C5', 2]],
-    [['E4', 2], ['C5', 4], [null, 2]],
-    [['G4', 2], ['C5', 2], ['E5', 2], ['G5', 2]],
-    [['E5', 4], ['C5', 4]],
-    [['A4', 2], ['C5', 2], ['F5', 2], ['E5', 2]],
-    [['D5', 4], ['C5', 2], ['A4', 2]],
-    [['G4', 2], ['C5', 2], ['E5', 2], ['C5', 2]],
-    [['A4', 2], ['C#5', 2], ['E5', 2], ['G5', 2]],
-    [['F#5', 2], ['D5', 2], ['A4', 2], ['C5', 2]],
-    [['B4', 4], [null, 1]].concat(PICK)
-  ];
-  // Left hand per bar: [bass midi, chord midis]
-  var C_ = [48, [52, 55, 60]], G7 = [43, [53, 59, 62]], F_ = [41, [57, 60, 65]], A7 = [45, [55, 61, 64]], D7 = [50, [54, 57, 60]];
-  var LH = [C_, C_, C_, C_, G7, C_, C_, C_, C_, C_, F_, F_, C_, A7, D7, G7];
-  var SIXTEENTH = 0.16; // seconds (about 94 bpm)
-
-  var ctx = null, master = null, timer = null, nextBar = 0, barIdx = 0, playing = false;
-  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
-  function note(m, t, dur, vel) {
-    var cents = (Math.random() - 0.5) * 10; // slight detune
-    var g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(vel, t + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    var lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass'; lp.frequency.value = 2600;
-    lp.connect(master); g.connect(lp);
-    [['triangle', 1, 1], ['sine', 2, 0.35]].forEach(function (o) {
-      var osc = ctx.createOscillator(), og = ctx.createGain();
-      osc.type = o[0]; osc.frequency.value = hz(m) * o[1]; osc.detune.value = cents;
-      og.gain.value = o[2];
-      osc.connect(og); og.connect(g);
-      osc.start(t); osc.stop(t + dur + 0.05);
-    });
+  /* ---------- 4. Main title (the official HBO opening credits, embedded from YouTube) ----------
+     Nothing plays until a visitor clicks. The video stays visible in a small card, as YouTube requires. */
+  var TITLE_VIDEO = 'elkHuRROPfk'; // "Westworld Season 1 Opening Credits | HBO" on HBO's YouTube channel
+  var playing = false, card = null;
+  function openTitle() {
+    card = el('div', 'fx-title');
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-label', 'Westworld main title');
+    var head = el('div', 'fx-title-head');
+    head.appendChild(el('span', null, 'Main title · Ramin Djawadi · HBO'));
+    var x = el('button', 'fx-title-x', 'Close');
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Stop and close the main title');
+    x.addEventListener('click', function () { closeTitle(); paintPiano(); pBtn.focus(); });
+    head.appendChild(x);
+    var frame = document.createElement('iframe');
+    frame.src = 'https://www.youtube-nocookie.com/embed/' + TITLE_VIDEO + '?autoplay=1&rel=0&playsinline=1&modestbranding=1';
+    frame.title = 'Westworld Season 1 opening credits (HBO)';
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+    frame.setAttribute('allowfullscreen', '');
+    card.appendChild(head); card.appendChild(frame);
+    document.body.appendChild(card);
+    playing = true;
   }
-  function scheduleBar(t) {
-    var pos = 0, mel = MEL[barIdx], lh = LH[barIdx];
-    mel.forEach(function (n) {
-      if (n[0]) note(N[n[0]], t + pos * SIXTEENTH, Math.max(0.35, n[1] * SIXTEENTH * 1.6), 0.5);
-      pos += n[1];
-    });
-    note(lh[0], t, 0.55, 0.42);
-    lh[1].forEach(function (m) { note(m, t + 4 * SIXTEENTH, 0.4, 0.22); });
-    barIdx = (barIdx + 1) % MEL.length;
-  }
-  function pump() {
-    while (nextBar < ctx.currentTime + 0.6) {
-      scheduleBar(nextBar);
-      nextBar += 8 * SIXTEENTH;
-    }
-  }
-  function startPiano() {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return false;
-    try {
-      ctx = new AC();
-      master = ctx.createGain(); master.gain.value = 0.07;
-      master.connect(ctx.destination);
-      if (ctx.resume) ctx.resume();
-      barIdx = 0; nextBar = ctx.currentTime + 0.1;
-      pump(); timer = setInterval(pump, 150);
-      playing = true;
-      return true;
-    } catch (e) { ctx = null; return false; }
-  }
-  function stopPiano() {
-    playing = false;
-    if (timer) { clearInterval(timer); timer = null; }
-    if (ctx) {
-      try { master.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.08); } catch (e) {}
-      var c = ctx; ctx = null;
-      setTimeout(function () { try { c.close(); } catch (e) {} }, 500);
-    }
-  }
+  function closeTitle() { if (card) { card.remove(); card = null; } playing = false; }
   function paintPiano() {
-    var wanted = store('fx-piano') === '1';
     pBtn.classList.toggle('fx-playing', playing);
     pBtn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-    pLabel.textContent = playing ? 'Piano on' : (wanted ? 'Resume piano' : 'Player piano');
-    pBtn.title = playing ? 'Stop the player piano' : (wanted ? 'Resume the player piano (audio needs a click)' : 'Play a quiet public-domain player piano rag (Joplin, 1902)');
-    pBtn.setAttribute('aria-label', playing ? 'Player piano: on. Activate to stop.' : (wanted ? 'Resume player piano' : 'Player piano: off. Activate to play a quiet rag.'));
+    pLabel.textContent = playing ? 'Main title on' : 'Main title';
+    pBtn.title = playing ? 'Stop the Westworld main title' : 'Play the Westworld main title (HBO opening credits)';
+    pBtn.setAttribute('aria-label', playing ? 'Main title: playing. Activate to stop.' : 'Play the Westworld main title');
   }
   pBtn.addEventListener('click', function () {
-    if (playing) { stopPiano(); store('fx-piano', '0'); }
-    else if (startPiano()) store('fx-piano', '1');
+    if (playing) closeTitle(); else openTitle();
     paintPiano();
   });
   aBtn.addEventListener('click', function () { setAnalysis(!root.classList.contains('fx-analysis')); });
