@@ -19,3 +19,4 @@
 .bp-label { display: block; margin-bottom: .4rem; font: 400 .9rem var(--fellsc); font-style: normal; color: var(--ox); letter-spacing: .05em; }
 .team-card .more { color: var(--ox); }
 .build-text h4 { margin: 1.6rem 0 .6rem; font: 400 1.05rem var(--fellsc); letter-spacing: .05em; color: var(--ox); }
+.path-intro { max-width: 44rem; margin: 0; font: 400 1.12rem/1.65 var(--body); }
