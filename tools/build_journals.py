@@ -6,9 +6,8 @@ Usage (from the site folder):
     python3 tools/build_journals.py ian neve   # rebuild only these members
 
 Each journals/<name>.md is turned into the Journal list on <name>.html,
-written between the <!-- JOURNAL:START --> and <!-- JOURNAL:END --> markers,
-and into the "Then / Now" slider, written between <!-- THENNOW:START --> and
-<!-- THENNOW:END -->. Everything else on the page is left alone. See journals/README.md for the
+written between the <!-- JOURNAL:START --> and <!-- JOURNAL:END --> markers.
+Everything else on the page is left alone. See journals/README.md for the
 source format.
 """
 
@@ -21,8 +20,6 @@ SITE = Path(__file__).resolve().parent.parent
 JOURNALS = SITE / "journals"
 START = "<!-- JOURNAL:START -->"
 END = "<!-- JOURNAL:END -->"
-TN_START = "<!-- THENNOW:START -->"
-TN_END = "<!-- THENNOW:END -->"
 INDENT = "      "
 
 
@@ -35,7 +32,7 @@ def inline(text):
 
 
 def parse(source):
-    """Return a list of entries: {title, status, pair, blocks}."""
+    """Return a list of entries: {title, status, blocks}."""
     entries, entry, para, lst, quote = [], None, [], [], []
 
     def flush():
@@ -54,18 +51,15 @@ def parse(source):
     for raw in source.splitlines():
         line = raw.strip()
         if line.startswith("<!--") or line.startswith("# "):
-            continue  # comments and the member's name line (see member_name)
+            continue  # comments and the member's name line
         if line.startswith("## "):
             flush()
-            entry = {"title": line[3:].strip(), "status": "", "pair": "", "blocks": []}
+            entry = {"title": line[3:].strip(), "status": "", "blocks": []}
             entries.append(entry)
         elif entry is None:
             continue
         elif line.lower().startswith("status:") and not entry["blocks"] and not para:
             entry["status"] = line.split(":", 1)[1].strip()
-        elif line.lower().startswith("pair:") and not entry["blocks"] and not para:
-            value = line.split(":", 1)[1].strip().lower()
-            entry["pair"] = value if value in ("then", "now") else ""
         elif not line:
             flush()
         elif line.startswith("- "):
@@ -84,21 +78,6 @@ def parse(source):
     return entries
 
 
-def block_lines(e, ind):
-    """The paragraphs, bullet lists and quotes of one entry."""
-    out = []
-    for kind, body in e["blocks"]:
-        if kind == "p":
-            out.append(f"{ind}<p>{inline(body)}</p>")
-        elif kind == "quote":
-            out.append(f"{ind}<blockquote>{inline(body)}</blockquote>")
-        else:
-            out.append(f"{ind}<ul>")
-            out.extend(f"{ind}  <li>{inline(item)}</li>" for item in body)
-            out.append(f"{ind}</ul>")
-    return out
-
-
 def render(entries):
     """Each entry is a Reverie: a stop on the member's trail, alternating sides."""
     if not entries:
@@ -113,82 +92,19 @@ def render(entries):
         out.append(f"{INDENT}      <h3>{inline(e['title'])}</h3>")
         if e["status"]:
             out.append(f'{INDENT}      <p class="journal-status">{inline(e["status"])}</p>')
-        out.extend(block_lines(e, f"{INDENT}      "))
+        for kind, body in e["blocks"]:
+            if kind == "p":
+                out.append(f"{INDENT}      <p>{inline(body)}</p>")
+            elif kind == "quote":
+                out.append(f"{INDENT}      <blockquote>{inline(body)}</blockquote>")
+            else:
+                out.append(f"{INDENT}      <ul>")
+                out.extend(f"{INDENT}        <li>{inline(item)}</li>" for item in body)
+                out.append(f"{INDENT}      </ul>")
         out.append(f"{INDENT}    </article>")
         out.append(f"{INDENT}  </li>")
     out.append(f"{INDENT}</ol>")
     return "\n".join(out)
-
-
-def member_name(source, stem):
-    """Full name from the '# Name' line, else the file name."""
-    for raw in source.splitlines():
-        if raw.strip().startswith("# "):
-            return raw.strip()[2:].strip()
-    return stem.title()
-
-
-def pick_pair(entries):
-    """Return (then_index, now_index), or None if there is no pair yet."""
-    if len(entries) < 2:
-        return None
-    marked = {}
-    for i, e in enumerate(entries):
-        if e["pair"] and e["pair"] not in marked:
-            marked[e["pair"]] = i
-    then = marked.get("then", 0)
-    if "now" in marked:
-        now = marked["now"]
-    else:
-        done = [i for i, e in enumerate(entries) if "in progress" not in e["status"].lower()]
-        now = done[-1] if done else None
-    if now is None or now == then:
-        return None
-    return then, now
-
-
-def render_thennow(entries, first_name):
-    """The Then / Now slider (or a placeholder until there are two Reveries)."""
-    pair = pick_pair(entries)
-    if pair is None:
-        return f'{INDENT}<p class="slot tn-empty">[Then / Now appears once there are two Reveries]</p>'
-    then, now = pair
-
-    def pane(cls, label, i):
-        e = entries[i]
-        lines = [
-            f'{INDENT}    <article class="tn-pane {cls}">',
-            f'{INDENT}      <span class="no">{label} · Reverie {i + 1:02d}</span>',
-            f"{INDENT}      <h3>{inline(e['title'])}</h3>",
-        ]
-        if e["status"]:
-            lines.append(f'{INDENT}      <p class="journal-status">{inline(e["status"])}</p>')
-        lines.extend(block_lines(e, f"{INDENT}      "))
-        lines.append(f"{INDENT}    </article>")
-        return lines
-
-    out = [f'{INDENT}<div class="tn" data-tn>', f'{INDENT}  <div class="tn-stage">']
-    out += pane("tn-now", "Now", now)
-    out += pane("tn-then", "Then", then)
-    out += [
-        f'{INDENT}    <div class="tn-handle" role="slider" tabindex="0" aria-orientation="horizontal"'
-        ' aria-label="Then and Now divider" aria-valuemin="25" aria-valuemax="75"'
-        ' aria-valuenow="50" aria-valuetext="Half Then, half Now">',
-        f'{INDENT}      <span class="tn-grip" aria-hidden="true"></span>',
-        f"{INDENT}    </div>",
-        f"{INDENT}  </div>",
-        f'{INDENT}  <p class="slot tn-caption">[A sentence by {html.escape(first_name)} on what changed]</p>',
-        f"{INDENT}</div>",
-    ]
-    return "\n".join(out)
-
-
-def install_thennow(page_html, block):
-    """Replace the block between the THENNOW markers (they must exist)."""
-    if TN_START not in page_html or TN_END not in page_html:
-        raise ValueError("no THENNOW markers found")
-    pattern = re.compile(re.escape(TN_START) + r".*?" + re.escape(TN_END), re.S)
-    return pattern.sub(lambda m: f"{TN_START}\n{block}\n      {TN_END}", page_html, count=1)
 
 
 def install(page_html, block):
@@ -222,13 +138,10 @@ def main(names):
         if not page.exists():
             print(f"skip {src.name}: no {page.name}")
             continue
-        text = src.read_text(encoding="utf-8")
-        entries = parse(text)
-        first = member_name(text, src.stem).split()[0]
-        new_page = install(page.read_text(encoding="utf-8"), render(entries))
-        if TN_START in new_page:
-            new_page = install_thennow(new_page, render_thennow(entries, first))
-        page.write_text(new_page, encoding="utf-8")
+        entries = parse(src.read_text(encoding="utf-8"))
+        page.write_text(
+            install(page.read_text(encoding="utf-8"), render(entries)), encoding="utf-8"
+        )
         print(f"{page.name}: {len(entries)} entries")
 
 

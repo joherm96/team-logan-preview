@@ -1,39 +1,8 @@
-/* Paths: Then/Now slider and facts. */
+/* Paths: facts and full builds on member pages. */
 
 /* ---- Facts: placeholders look intentional ---- */
 .fact dd { font-style: normal; color: var(--ink); min-height: 2.1rem; }
 .fact dd.is-empty { display: inline-block; font: italic 400 .95rem/1.3 var(--body); color: var(--r3); border: 1.5px dashed var(--r2); border-radius: .3rem; padding: .3rem .6rem; background: rgb(244 234 214 / .55); }
-
-/* ---- Then / Now ---- */
-.thennow { background: var(--r2); padding-block: 3.5rem 3.2rem; }
-.thennow .eyebrow { color: var(--ink); }
-.thennow .lede { color: var(--ink); margin-bottom: 1.4rem; }
-.tn-stage { --pos: 50%; position: relative; display: grid; max-width: 54rem; margin: 0 auto; border-radius: .3rem; overflow: hidden; box-shadow: 0 16px 34px -20px rgb(0 0 0 / .7); touch-action: pan-y; cursor: ew-resize; user-select: none; -webkit-user-select: none; }
-.tn-stage { grid-template-columns: var(--pos) minmax(0, 1fr); align-items: stretch; transition: grid-template-columns .05s linear; }
-.tn-pane { overflow: hidden; overflow-wrap: anywhere; hyphens: auto; padding: 1.3rem 1.5rem 1.6rem; min-width: 0; }
-.tn-pane .no { display: block; font: 400 .98rem/1.3 var(--fellsc); letter-spacing: .08em; }
-.tn-pane h3 { font: 400 1.4rem/1.15 var(--slab); margin: .15rem 0 .5rem; }
-.tn-pane p { margin: .5rem 0 0; font-size: 1rem; }
-.tn-pane ul { margin: .4rem 0 0; padding-left: 1.2rem; }
-.tn-pane blockquote { margin: .8rem 0 0; padding-left: .9rem; border-left: 3px solid var(--gold); font: italic 400 1.1rem/1.45 var(--fell); }
-.tn-then { grid-area: 1 / 1; background: var(--bone); color: var(--ink); }
-.tn-then .no { color: var(--ox); }
-.tn-now { grid-area: 1 / 2; background: #2b1e14; color: var(--bone); }
-.tn-now .no { color: var(--gold); }
-.tn-pane .journal-status { margin-top: 0 !important; }
-.tn-handle { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2.75rem; margin-left: -1.375rem; cursor: ew-resize; touch-action: none; display: flex; align-items: center; justify-content: center; }
-.tn-handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 3px; margin-left: -1.5px; background: var(--gold); box-shadow: 0 0 0 1px rgb(20 13 8 / .45); }
-.tn-grip { position: relative; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--gold); border: 2px solid var(--ink); box-shadow: 0 4px 10px rgb(0 0 0 / .45); }
-.tn-grip::before, .tn-grip::after { content: ""; position: absolute; top: 50%; width: 0; height: 0; margin-top: -.35rem; border: .35rem solid transparent; }
-.tn-grip::before { left: .25rem; border-right-color: var(--ink); border-left-width: 0; }
-.tn-grip::after { right: .25rem; border-left-color: var(--ink); border-right-width: 0; }
-.tn-handle:focus-visible { outline: none; }
-.tn-handle:focus-visible .tn-grip { outline: 3px solid var(--ink); outline-offset: 3px; }
-.tn.dragging .tn-grip { transform: scale(1.08); }
-.tn-caption, .tn-empty { max-width: 54rem; margin: 1.1rem auto 0; }
-.tn-empty { margin-top: 0; background: rgb(244 234 214 / .55); }
-.tn-caption { background: rgb(244 234 214 / .55); }
-@media (max-width: 30rem) { .tn-pane { padding: 1.1rem 1rem 1.3rem; } .tn-handle { width: 3rem; margin-left: -1.5rem; } }
 
 
 /* Full builds on a Path page (one per row, expandable) */

@@ -41,11 +41,5 @@ Text of an entry that isn't finished yet.
   short title and give it to everyone in the same words.
 - `status: ...` (optional, right under the title) shows a small tag, such as
   "In progress". Delete the line once the entry is done.
-- `pair: then` or `pair: now` (optional, right under the title; can sit next
-  to `status:`) picks which Reverie fills the left (Then) or right (Now) side
-  of the "Then / Now" slider on your Path page. Not shown on the page itself.
-  If you mark nothing, Then is your first Reverie and Now is your latest one
-  that is not "In progress". With fewer than two Reveries the slider shows a
-  placeholder. Re-run the build script after changing it.
 - `**bold**` and `*italic*` work inside text.
 - Keep entries in prompt order, oldest first.
