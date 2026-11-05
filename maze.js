@@ -217,7 +217,11 @@
     if (d.type === "rad") { held.clear(); pass(d.dir); }
     else if (d.type === "tan") {
       if (reduced) { if (!stepTangent(d.dir, 12)) bump(); place(); save(); watchGaps(); }
-      else { held.set(ev.key, d.dir); kick(); }
+      else {
+        // a quick tap still takes a visible step; holding the key keeps walking
+        if (!ev.repeat) { if (!stepTangent(d.dir, 4)) bump(); place(); watchGaps(); }
+        held.set(ev.key, d.dir); kick();
+      }
     } else bump();
   });
   svg.addEventListener("keyup", ev => { if (held.delete(ev.key) && !held.size) save(); });
@@ -302,7 +306,27 @@
     ring = 1; a = 270; vr = mid(1); va = a; place();
     showRing(1); light(1); lastGap = gapNow(); announce("Back at the entrance. Ring 1, Build 1."); save();
   });
-  if (hint) hint.textContent = (window.matchMedia && matchMedia("(pointer: coarse)").matches) ? "Tap a ring or drag the lamp to walk the maze" : "Arrow keys or tap to walk the maze";
+  if (hint) hint.textContent = (window.matchMedia && matchMedia("(pointer: coarse)").matches) ? "Tap a ring or drag the lamp to walk the maze" : "Use the arrow keys to walk the lamp inward";
+
+  /* ---------- arrow keys work without clicking the maze first ----------
+     While the maze is on screen, arrow keys pressed anywhere on the page (not in a form field)
+     go to the maze instead of scrolling. Scroll past the maze and arrows scroll the page again. */
+  const ARROWS = { ArrowUp: 1, ArrowDown: 1, ArrowLeft: 1, ArrowRight: 1 };
+  function mazeOnScreen() {
+    const r = svg.getBoundingClientRect(), h = window.innerHeight;
+    return r.height > 0 && r.top < h * 0.75 && r.bottom > h * 0.25;
+  }
+  function freeTarget(t) {
+    return !t || t === document.body || t === document.documentElement ||
+      !(t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) || t.closest("details[open] summary, [role=slider]"));
+  }
+  document.addEventListener("keydown", ev => {
+    if (!ARROWS[ev.key] || ev.altKey || ev.ctrlKey || ev.metaKey || svg.contains(ev.target)) return;
+    if (!freeTarget(ev.target) || !mazeOnScreen()) return;
+    ev.preventDefault();
+    svg.focus({ preventScroll: true });
+    svg.dispatchEvent(new KeyboardEvent("keydown", { key: ev.key, repeat: ev.repeat, bubbles: true, cancelable: true }));
+  });
   const pv = document.getElementById("maze-preview");
   if (pv && typeof PREVIEW !== "undefined" && PREVIEW) {
     const d = new Date(TODAY + "T12:00:00");
