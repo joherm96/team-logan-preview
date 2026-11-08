@@ -129,3 +129,6 @@ button.btn:focus-visible { outline: 2px solid var(--ox); outline-offset: 3px; }
   .panel { position: static; margin-top: 1rem; }
   .cs-map { background: linear-gradient(var(--r1), var(--r3) 40%, var(--r6)); }
 }
+
+/* Team captions on the Dreams page */
+.dream-note { margin: 0; max-width: 40rem; font: 400 1.04rem/1.7 var(--body); }

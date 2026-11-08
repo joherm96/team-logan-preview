@@ -77,3 +77,6 @@
 .pd-go { display: block; width: fit-content; margin-top: .7rem; font: 400 .98rem var(--fellsc); color: var(--ox); }
 .pd-missing { margin: 1.2rem 0 0; font: italic 400 1rem var(--fell); color: var(--r3); }
 @media (max-width: 30rem) { .pd-sheet { padding: 1rem 1rem 1.4rem; } .pd-top { top: -1rem; padding-top: 1rem; margin-top: -1rem; } }
+
+/* Team intro in the home hero */
+.team-intro { margin: 0; max-width: 34rem; font: 400 1.06rem/1.65 var(--body); }
