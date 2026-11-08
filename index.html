@@ -89,7 +89,7 @@
               <h3 id="ri-name">Build 2</h3>
               <p class="kind" id="ri-kind">Team · Recognition</p>
               <p class="note" id="ri-note">Hegel and Fanon on why consciousness needs another.</p>
-              <div class="ri-row"><span class="badge reached" id="ri-badge">Reached</span><span id="ri-due">Due Sep 25</span><a class="btn" id="ri-link" href="team.html#build-2">Enter this ring</a></div>
+              <div class="ri-row"><span class="badge reached" id="ri-badge">Reached</span><span id="ri-due">Due Sep 25</span><a class="btn" id="ri-link" href="team.html#build-2">Enter this ring</a><button class="btn btn-papers" id="ri-papers" type="button">Read the papers</button></div>
             </div>
             <p class="legend"><span class="lg-reached">Reached</span><span class="lg-near">Approaching</span><span class="lg-locked">Not yet reached</span></p>
           </div>
@@ -145,6 +145,19 @@
         <p class="center-note" id="center-note">Not yet reached.</p>
       </div>
     </section>
+    <dialog class="papers-dlg" id="papers-dlg" aria-labelledby="pd-heading">
+      <div class="pd-sheet">
+        <div class="pd-top">
+          <div>
+            <p class="eyebrow" id="pd-eyebrow">Ring</p>
+            <h2 id="pd-heading">The papers</h2>
+          </div>
+          <button class="pd-close" id="pd-close" type="button" aria-label="Close the papers">Close</button>
+        </div>
+        <div class="pd-list" id="pd-list"></div>
+        <p class="pd-missing" id="pd-missing" hidden></p>
+      </div>
+    </dialog>
   </main>
   <footer class="site-footer">
     <div class="wrap">
@@ -154,6 +167,8 @@
   </footer>
   <script src="rings.js"></script>
   <script src="maze.js"></script>
+  <script src="papers.js"></script>
+  <script src="papers-panel.js"></script>
   <script src="fx.js"></script>
 </body>
 </html>

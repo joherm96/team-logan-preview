@@ -53,6 +53,7 @@ function showRing(n) {
   link.hidden = !open;
   if (open) { link.href = r.link; link.textContent = r.linkText || "Enter this ring"; }
   document.querySelectorAll(".ring").forEach(el => el.classList.toggle("sel", +el.dataset.ring === n));
+  document.dispatchEvent(new CustomEvent("ringshown", { detail: { n } }));  // papers-panel.js listens
 }
 
 function renderLocks() {

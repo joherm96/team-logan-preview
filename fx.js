@@ -193,28 +193,11 @@
   });
   try { console.log('%cSome doors only open for those who remember the words.', 'font-style:italic;color:#b07a3e'); } catch (e) {}
 
-  /* ---------- 3. Reveries glitch-in ---------- */
-  function initReveries() {
-    var arts = document.querySelectorAll('.rev article');
-    if (!arts.length || reduce || !('IntersectionObserver' in window)) return;
-    root.classList.add('fx-rev');
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        var a = en.target; io.unobserve(a);
-        a.classList.add('fx-glitch');
-        setTimeout(function () { a.classList.add('fx-in'); a.classList.remove('fx-glitch'); }, 720);
-      });
-    }, { threshold: 0.12 });
-    arts.forEach(function (a) { io.observe(a); });
-  }
-
   /* ---------- boot ---------- */
   function boot() {
     document.body.appendChild(dock);
     paintPiano();
     loadNotes();
-    initReveries();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

@@ -322,6 +322,7 @@
   }
   document.addEventListener("keydown", ev => {
     if (!ARROWS[ev.key] || ev.altKey || ev.ctrlKey || ev.metaKey || svg.contains(ev.target)) return;
+    if (document.querySelector("dialog[open]")) return;   // reading papers: leave the arrows alone
     if (!freeTarget(ev.target) || !mazeOnScreen()) return;
     ev.preventDefault();
     svg.focus({ preventScroll: true });

@@ -1,4 +1,4 @@
-/* fx: site-wide effects layer (music, easter eggs, reveries, page transitions) */
+/* fx: site-wide effects layer (music, easter eggs, page transitions) */
 
 /* ---- 5. Page transitions ---- */
 @view-transition { navigation: auto; }
@@ -42,18 +42,6 @@
 .fx-egg.fx-small { background: rgb(8 4 2 / .6); }
 .fx-egg.fx-small .fx-egg-text { font-size: clamp(1.3rem, 4vw, 2.2rem); }
 
-/* ---- 3. Reveries glitch-in ---- */
-html.fx-rev .rev article:not(.fx-in) { opacity: 0; }
-html.fx-rev .rev article.fx-glitch { animation: fx-glitch .7s steps(1, end) both; }
-@keyframes fx-glitch {
-  0%   { opacity: 0; transform: translateX(0); text-shadow: none; }
-  14%  { opacity: .85; transform: translateX(-6px); text-shadow: 2px 0 rgb(255 60 60 / .55), -2px 0 rgb(60 140 255 / .55); }
-  28%  { opacity: .15; transform: translateX(4px); text-shadow: -2px 0 rgb(255 60 60 / .5), 2px 0 rgb(60 140 255 / .5); }
-  44%  { opacity: .95; transform: translateX(-3px); text-shadow: 2px 0 rgb(255 60 60 / .45), -2px 0 rgb(60 140 255 / .45); }
-  60%  { opacity: .5; transform: translateX(2px); text-shadow: -1px 0 rgb(255 60 60 / .4), 1px 0 rgb(60 140 255 / .4); }
-  80%  { opacity: 1; transform: translateX(-1px); text-shadow: 1px 0 rgb(255 60 60 / .25), -1px 0 rgb(60 140 255 / .25); }
-  100% { opacity: 1; transform: none; text-shadow: none; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   body { animation: none !important; }
@@ -61,5 +49,4 @@ html.fx-rev .rev article.fx-glitch { animation: fx-glitch .7s steps(1, end) both
   .fx-roll i { animation: none; left: 20%; }
   .fx-egg { transition: none; }
   .fx-egg.fx-flare .fx-egg-lamp { animation: none; opacity: .6; transform: scale(1.4); }
-  html.fx-rev .rev article:not(.fx-in) { opacity: 1; }
 }
