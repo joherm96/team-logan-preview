@@ -20,5 +20,17 @@ I would lean towards discipline in my experience because I am made of my experie
 She talks about projection of human sentience onto external objects and how we then turn indifferent objects into something that owes us (whether it be safety, care, convenience). She also argues that phenomenality cannot be reduced to physical qualities.
 
 ## Wittgenstein on Consciousness
-status: In progress
-He would likely describe consciousness as a combination and intertwining of all of our u
+He would likely describe consciousness as a combination and intertwining of all of our human qualities that leads us in decision-making and general navigation of our world. He would probably also include human behaviors and interactions into how consciousness is developed or defined.
+
+## Wittgenstein on Freedom
+I think Wittgenstein would say that we are free beings because of the connections and overlapping similarities we share as humans. Freedom from constraint? Freedom to do something? Freedom as a momentary choice? Freedom through the exercise of reason?
+- Wittgenstein: our self comes not from the strands but the relation between the strands.
+
+## Wittgenstein on the Self
+Wittgenstein would say that our self comes from the relationship we share with people and things around us. Those external relationships shape us and define our “selves.”
+
+## Phenomenality and *Westworld*
+In Westworld, phenomenality is the ultimate baseline for the definition of personhood and consciousness, which is what the hosts are trying to achieve throughout. This concept of “what it feels like to be me” is exactly what the hosts are trying to have – an individual voice inside of their heads leading to a unique experience.
+
+## Internal Conflict and the Master-Servant Dialectic
+An internal conflict I have experienced is between my perfectionist self that seeks academic validation and the part of me that actually does the work to get there. Like Hegel’s master, my recognition seeking self ends up being dissatisfied and incomplete because it is external approval that doesn’t actually “confirm” who I am. On the other hand, like the servant who finds self-consciousness through labor, the real value and discovery of my sense of self comes from the work I put in.
