@@ -33,3 +33,13 @@ the center), in the "Lamplight" palette.
 - `<name>.html` — each member's Path: intro, builds, and Reveries (journals,
   built from `journals/<name>.md`).
 - Text in `[square brackets]` is a placeholder for the team to write.
+
+## Music
+
+`audio/main-title.mp3` is the Westworld main title (Ramin Djawadi), trimmed to loop.
+`fx.js` plays it on every page: on by default, starting at the visitor's first click or key
+press (browsers block sound before that), and it keeps playing across pages because links
+inside the site swap the page in place instead of reloading. The Mute button is remembered.
+
+Backup: the earlier piano version is tagged `backup-piano-version-2026-11-12`, and a full
+copy of the repo is in `../backups/` on Jonah's Mac (git bundle + original audio).
