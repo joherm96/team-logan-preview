@@ -153,8 +153,11 @@
     return o + '<circle cx="200" cy="200" r="190" class="fx-gw-rim"/><circle cx="200" cy="200" r="30" fill="url(#fxGateCore)" class="fx-gate-core"/></svg>';
   })();
   function entered() { try { return sessionStorage.getItem('fx-entered') === '1'; } catch (e) { return false; } }
+  // ?gate in the address always shows the card (for previewing it in a browser that allows sound).
+  var forceGate = /[?&]gate\b/.test(location.search);
   function showGate() {
-    if (muted || entered() || !AC || document.querySelector('.fx-gate')) return;
+    if (!forceGate && (muted || entered() || !AC)) return;
+    if (document.querySelector('.fx-gate')) return;
     var gate = el('div', 'fx-gate');
     gate.setAttribute('role', 'dialog');
     gate.setAttribute('aria-modal', 'true');
@@ -199,7 +202,7 @@
     window.addEventListener('resize', placeGlow);
     // If this browser lets the music play without a click, the card is not needed: take it away
     // quietly before it has faded in (no dive), and the music just plays.
-    if (ctx) {
+    if (ctx && !forceGate) {
       var check = function () {
         if (ctx.state !== 'running' || gate.classList.contains('fx-gate-out') || !gate.parentNode) return;
         try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
