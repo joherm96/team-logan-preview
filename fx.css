@@ -92,10 +92,12 @@ html.fx-gated { overflow: hidden; }
 .fx-gate:hover .fx-gate-btn, .fx-gate-btn:focus-visible { background: #f0b552; transform: translateY(-1px); box-shadow: 0 1px 0 #b97f25, 0 14px 28px -12px rgb(122 42 31 / .7); }
 .fx-gate-btn:focus-visible { outline: 2px solid var(--ox, #7a2a1f); outline-offset: 3px; }
 .fx-gate-note { margin: .9rem 0 0; font: italic 400 .95rem/1.3 var(--fell, Georgia, serif); color: var(--r3, #7d5a3c); }
+@property --fx-r { syntax: "<length>"; inherits: false; initial-value: 0px; }
 .fx-gate-glow {
-  position: absolute; z-index: 2; pointer-events: none; left: var(--fx-cx, 50%); top: var(--fx-cy, 50%);
-  width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; opacity: 0;
-  background: radial-gradient(circle, #fff6df 0%, #f7eedb 45%, var(--r0, #efe3c8) 62%, rgb(239 227 200 / 0) 72%);
+  /* full-screen layer; only the light's radius grows (no giant scaling, so Chrome never has to redraw a huge layer) */
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; --fx-r: 0px;
+  background: radial-gradient(circle var(--fx-r) at var(--fx-cx, 50%) var(--fx-cy, 50%),
+    #fff6df 0%, #f7eedb 55%, var(--r0, #efe3c8) 82%, rgb(239 227 200 / 0) 100%);
 }
 
 /* leaving: the words fall away, the maze dives toward its lamp, the lamp light floods the screen
@@ -104,14 +106,15 @@ html.fx-gated { overflow: hidden; }
 .fx-gate-out .fx-gate-in { animation: none; }
 .fx-gate-out .fx-gate-kicker, .fx-gate-out .fx-gate-title, .fx-gate-out .fx-gate-btn, .fx-gate-out .fx-gate-note { opacity: 0; transition: opacity .3s ease; }
 .fx-gate-out .fx-gate-stage { box-shadow: 0 0 0 0 rgb(29 20 12 / 0); }
-.fx-gate-out .fx-gate-maze { transform: scale(9); transition: transform 1.1s cubic-bezier(.45, 0, .7, .4); }
+.fx-gate-out .fx-gate-maze { transform: scale(9); opacity: 0; transition: transform 1.1s cubic-bezier(.45, 0, .7, .4), opacity .15s linear .85s; }
 .fx-gate-out .fx-gw, .fx-gate-out .fx-gate-core { animation-play-state: paused; }
 .fx-gate-out .fx-gate-glow { animation: fx-gate-flood .7s cubic-bezier(.55, 0, .75, .45) .32s forwards; }
 @keyframes fx-gate-flood {
-  0% { opacity: 0; transform: scale(1); }
-  25% { opacity: 1; }
-  100% { opacity: 1; transform: scale(320); }
+  0% { opacity: 0; --fx-r: 10px; }
+  20% { opacity: 1; }
+  100% { opacity: 1; --fx-r: 150vmax; }
 }
+
 
 @media (max-height: 560px) { .fx-gate-stage { width: min(34vh, 60vw); } .fx-gate-note { display: none; } }
 @media (prefers-reduced-motion: reduce) {
