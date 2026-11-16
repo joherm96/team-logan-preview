@@ -126,31 +126,58 @@
   });
   /* ---------- Entry screen ----------
      Browsers will not play sound before the visitor clicks, so the first page of a visit opens on a
-     title card. Clicking it (or pressing any key) is that first click: the card fades away and the
-     music starts at the same moment. Skipped when music is muted, when the visitor already entered
+     title card with the turning maze. Clicking it (or pressing any key) is that first click: the view
+     dives into the center of the maze and the music starts at the same moment. Skipped when music is muted, when the visitor already entered
      this visit, or when the browser allows sound without a click. */
+  // The home page maze (same rings, colors and walls), each ring's walls turning on its own.
+  var GATE_MAZE = (function () {
+    var fills = ['#efe3c8', '#cfb48a', '#b07a3e', '#7d5a3c', '#5a3f2c', '#3e2c1f', '#271c14', '#140d08'];
+    var radii = [190, 169, 148, 127, 106, 85, 64, 34];
+    var walls = [
+      ['M34.1,167.8 A169,169 0 1 1 38.4,249.4', '368.8,191.2,389.7,190.1'],
+      ['M325.5,121.6 A148,148 0 1 1 274.0,71.8', '97.2,306.5,82.6,321.6'],
+      ['M167.1,322.7 A127,127 0 1 1 228.6,323.7', '298.7,120.1,315.0,106.9'],
+      ['M150.2,106.4 A106,106 0 1 1 112.1,140.7', '270.9,278.8,285.0,294.4'],
+      ['M280.4,227.7 A85,85 0 1 1 284.0,186.7', '115.3,192.6,94.4,190.8'],
+      ['M141.5,226.0 A64,64 0 1 1 160.6,250.4', '250.4,160.6,267.0,147.7'],
+      ['M213.3,168.7 A34,34 0 1 1 197.0,166.1', '194.7,233.6,190.0,263.2']
+    ];
+    var o = '<svg viewBox="0 0 400 400" class="fx-gate-maze" aria-hidden="true" focusable="false">' +
+      '<defs><radialGradient id="fxGateCore"><stop offset="0" stop-color="#fff0c4"/><stop offset=".35" stop-color="#f3b24a" stop-opacity=".9"/>' +
+      '<stop offset="1" stop-color="#e8a53c" stop-opacity="0"/></radialGradient></defs>';
+    radii.forEach(function (r, i) { o += '<circle cx="200" cy="200" r="' + r + '" fill="' + fills[i] + '"/>'; });
+    walls.forEach(function (w, i) {
+      var l = w[1].split(',');
+      o += '<g class="fx-gw fx-gw' + (i + 1) + '"><path d="' + w[0] + '"/><line x1="' + l[0] + '" y1="' + l[1] + '" x2="' + l[2] + '" y2="' + l[3] + '"/></g>';
+    });
+    return o + '<circle cx="200" cy="200" r="190" class="fx-gw-rim"/><circle cx="200" cy="200" r="30" fill="url(#fxGateCore)" class="fx-gate-core"/></svg>';
+  })();
   function entered() { try { return sessionStorage.getItem('fx-entered') === '1'; } catch (e) { return false; } }
   function showGate() {
     if (muted || entered() || !AC || document.querySelector('.fx-gate')) return;
     var gate = el('div', 'fx-gate');
     gate.setAttribute('role', 'dialog');
     gate.setAttribute('aria-modal', 'true');
-    gate.setAttribute('aria-label', 'Enter the site');
-    gate.appendChild(el('p', 'fx-gate-kicker', 'Welcome to'));
-    gate.appendChild(el('h2', 'fx-gate-title', 'Team Logan'));
-    var go = el('button', 'fx-gate-btn', 'Enter the park');
+    gate.setAttribute('aria-label', 'Team Logan. Enter the maze.');
+    var inner = el('div', 'fx-gate-in');
+    inner.appendChild(el('p', 'fx-gate-kicker', 'HP 241 \u00b7 Philosophy of Mind through Westworld'));
+    inner.appendChild(el('h2', 'fx-gate-title', 'TEAM LOGAN'));
+    var stage = el('div', 'fx-gate-stage');
+    stage.innerHTML = GATE_MAZE;
+    inner.appendChild(stage);
+    var go = el('button', 'fx-gate-btn', 'Enter the maze');
     go.type = 'button';
-    gate.appendChild(go);
-    gate.appendChild(el('p', 'fx-gate-note', 'Sound on'));
+    inner.appendChild(go);
+    inner.appendChild(el('p', 'fx-gate-note', 'Sound on \u00b7 click anywhere or press any key'));
+    gate.appendChild(inner);
     document.body.appendChild(gate);
     root.classList.add('fx-gated');
-    go.focus({ preventScroll: true });
     function enter() {
       try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
       unlock();
       root.classList.remove('fx-gated');
       gate.classList.add('fx-gate-out');
-      setTimeout(function () { if (gate.parentNode) gate.parentNode.removeChild(gate); }, reduce ? 0 : 900);
+      setTimeout(function () { if (gate.parentNode) gate.parentNode.removeChild(gate); }, reduce ? 300 : 1500);
       window.removeEventListener('keydown', onKey, true);
     }
     function onKey(e) { if (e.metaKey || e.ctrlKey || e.altKey || e.key === 'Tab') return; e.preventDefault(); enter(); }
