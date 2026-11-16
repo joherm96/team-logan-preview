@@ -39,7 +39,7 @@
   var AC = window.AudioContext || window.webkitAudioContext;
   var VOLUME = 0.55;
   var AUDIO_URL = (function () {
-    var me = document.querySelector('script[src$="fx.js"]');
+    var me = document.querySelector('script[src*="fx.js"]');
     return me ? me.src.replace(/fx\.js(\?.*)?$/, 'audio/main-title.mp3') : 'audio/main-title.mp3';
   })();
   var ctx = null, master = null, buffer = null, source = null, startedAt = 0, loading = null;
