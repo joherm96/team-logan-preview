@@ -170,25 +170,46 @@
     inner.appendChild(go);
     inner.appendChild(el('p', 'fx-gate-note', 'Sound on \u00b7 click anywhere or press any key'));
     gate.appendChild(inner);
+    // The lamp light that floods the screen on the way in, so the dive ends on parchment, not darkness.
+    gate.appendChild(el('div', 'fx-gate-glow'));
     document.body.appendChild(gate);
     root.classList.add('fx-gated');
+    function placeGlow() {
+      var r = stage.getBoundingClientRect();
+      gate.style.setProperty('--fx-cx', (r.left + r.width / 2) + 'px');
+      gate.style.setProperty('--fx-cy', (r.top + r.height / 2) + 'px');
+    }
+    function done() {
+      window.removeEventListener('keydown', onKey, true);
+      window.removeEventListener('resize', placeGlow);
+    }
     function enter() {
+      if (gate.classList.contains('fx-gate-out')) return;
       try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
       unlock();
+      placeGlow();
       root.classList.remove('fx-gated');
       gate.classList.add('fx-gate-out');
-      setTimeout(function () { if (gate.parentNode) gate.parentNode.removeChild(gate); }, reduce ? 300 : 1500);
-      window.removeEventListener('keydown', onKey, true);
+      setTimeout(function () { if (gate.parentNode) gate.parentNode.removeChild(gate); }, reduce ? 350 : 1450);
+      done();
     }
     function onKey(e) { if (e.metaKey || e.ctrlKey || e.altKey || e.key === 'Tab') return; e.preventDefault(); enter(); }
     gate.addEventListener('click', enter);
     window.addEventListener('keydown', onKey, true);
-    // If this browser lets the music play without a click, the card is not needed.
-    var poll = setInterval(function () {
-      if (!gate.parentNode || gate.classList.contains('fx-gate-out')) return clearInterval(poll);
-      if (isPlaying()) { clearInterval(poll); enter(); }
-    }, 250);
-    setTimeout(function () { clearInterval(poll); }, 5000);
+    window.addEventListener('resize', placeGlow);
+    // If this browser lets the music play without a click, the card is not needed: take it away
+    // quietly before it has faded in (no dive), and the music just plays.
+    if (ctx) {
+      var check = function () {
+        if (ctx.state !== 'running' || gate.classList.contains('fx-gate-out') || !gate.parentNode) return;
+        try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
+        root.classList.remove('fx-gated');
+        gate.parentNode.removeChild(gate);
+        done();
+      };
+      ctx.addEventListener('statechange', check);
+      check();
+    }
   }
 
   // Read-only status, used by the site's own browser test.
