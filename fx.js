@@ -124,6 +124,46 @@
     else { muted = true; store('fx-music', 'off'); stopMusic(); }
     paintPiano();
   });
+  /* ---------- Entry screen ----------
+     Browsers will not play sound before the visitor clicks, so the first page of a visit opens on a
+     title card. Clicking it (or pressing any key) is that first click: the card fades away and the
+     music starts at the same moment. Skipped when music is muted, when the visitor already entered
+     this visit, or when the browser allows sound without a click. */
+  function entered() { try { return sessionStorage.getItem('fx-entered') === '1'; } catch (e) { return false; } }
+  function showGate() {
+    if (muted || entered() || !AC || document.querySelector('.fx-gate')) return;
+    var gate = el('div', 'fx-gate');
+    gate.setAttribute('role', 'dialog');
+    gate.setAttribute('aria-modal', 'true');
+    gate.setAttribute('aria-label', 'Enter the site');
+    gate.appendChild(el('p', 'fx-gate-kicker', 'Welcome to'));
+    gate.appendChild(el('h2', 'fx-gate-title', 'Team Logan'));
+    var go = el('button', 'fx-gate-btn', 'Enter the park');
+    go.type = 'button';
+    gate.appendChild(go);
+    gate.appendChild(el('p', 'fx-gate-note', 'Sound on'));
+    document.body.appendChild(gate);
+    root.classList.add('fx-gated');
+    go.focus({ preventScroll: true });
+    function enter() {
+      try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
+      unlock();
+      root.classList.remove('fx-gated');
+      gate.classList.add('fx-gate-out');
+      setTimeout(function () { if (gate.parentNode) gate.parentNode.removeChild(gate); }, reduce ? 0 : 900);
+      window.removeEventListener('keydown', onKey, true);
+    }
+    function onKey(e) { if (e.metaKey || e.ctrlKey || e.altKey || e.key === 'Tab') return; e.preventDefault(); enter(); }
+    gate.addEventListener('click', enter);
+    window.addEventListener('keydown', onKey, true);
+    // If this browser lets the music play without a click, the card is not needed.
+    var poll = setInterval(function () {
+      if (!gate.parentNode || gate.classList.contains('fx-gate-out')) return clearInterval(poll);
+      if (isPlaying()) { clearInterval(poll); enter(); }
+    }, 250);
+    setTimeout(function () { clearInterval(poll); }, 5000);
+  }
+
   // Read-only status, used by the site's own browser test.
   window.__music = function () {
     return { state: ctx ? ctx.state : 'none', playing: isPlaying(), muted: muted, position: +position().toFixed(2), loaded: !!buffer };
@@ -254,6 +294,7 @@
     document.body.appendChild(dock);
     paintPiano();
     prepare();
+    showGate();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

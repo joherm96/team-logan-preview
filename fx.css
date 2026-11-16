@@ -50,3 +50,25 @@
   .fx-egg { transition: none; }
   .fx-egg.fx-flare .fx-egg-lamp { animation: none; opacity: .6; transform: scale(1.4); }
 }
+
+/* ---- Entry screen (first page of a visit; its click starts the music) ---- */
+html.fx-gated { overflow: hidden; }
+.fx-gate {
+  position: fixed; inset: 0; z-index: 200; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.1rem; padding: 1.5rem;
+  background: radial-gradient(ellipse at 50% 42%, rgb(232 165 60 / .16), rgb(8 4 2 / 0) 55%), #0b0704;
+  color: var(--bone, #f4ead6); text-align: center;
+  transition: opacity .85s ease, visibility .85s;
+}
+.fx-gate.fx-gate-out { opacity: 0; visibility: hidden; pointer-events: none; }
+.fx-gate-kicker { margin: 0; font: 400 clamp(.95rem, 2.4vw, 1.25rem)/1 var(--fellsc, Georgia, serif); letter-spacing: .3em; text-transform: uppercase; color: var(--gold, #e8a53c); opacity: .9; }
+.fx-gate-title { margin: 0; font: 400 clamp(2.6rem, 11vw, 6.5rem)/1 var(--slab, Rockwell, Georgia, serif); letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 0 34px rgb(232 165 60 / .45); }
+.fx-gate-btn {
+  margin-top: 1.2rem; cursor: pointer;
+  font: italic 400 clamp(1.1rem, 3vw, 1.5rem)/1 var(--fell, Georgia, serif); color: var(--bone, #f4ead6);
+  background: transparent; border: 1px solid rgb(232 165 60 / .7); border-radius: .2rem; padding: .85rem 1.8rem;
+  transition: background .2s, box-shadow .2s;
+}
+.fx-gate:hover .fx-gate-btn, .fx-gate-btn:focus-visible { background: rgb(232 165 60 / .14); box-shadow: 0 0 22px rgb(232 165 60 / .35); outline: none; }
+.fx-gate-note { margin: 0; font: 500 .68rem/1 ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; color: rgb(244 234 214 / .5); }
+@media (prefers-reduced-motion: reduce) { .fx-gate { transition: none; } }
