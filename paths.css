@@ -20,3 +20,11 @@
 .team-card .more { color: var(--ox); }
 .build-text h4 { margin: 1.6rem 0 .6rem; font: 400 1.05rem var(--fellsc); letter-spacing: .05em; color: var(--ox); }
 .path-intro { max-width: 44rem; margin: 0; font: 400 1.12rem/1.65 var(--body); }
+
+/* Individual illustration (quality of consciousness) */
+.illustration { background: var(--r2); padding-block: 3rem 3.5rem; }
+.illus { margin: 1.2rem 0 0; max-width: 60rem; }
+.illus img { display: block; width: 100%; height: auto; border-radius: .25rem; box-shadow: 0 18px 40px -24px rgb(0 0 0 / .75); outline: 1px solid rgb(0 0 0 / .12); outline-offset: -1px; }
+.illus figcaption { margin-top: 1rem; max-width: 44rem; font: italic 400 1.12rem/1.55 var(--fell); color: var(--ink); }
+.illus figcaption p { margin: 0; }
+.illus .illus-credit { margin-top: .5rem; font: 400 .85rem var(--fellsc); letter-spacing: .05em; color: var(--r4); font-style: normal; }
