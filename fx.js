@@ -191,6 +191,10 @@
       var r = stage.getBoundingClientRect();
       gate.style.setProperty('--fx-cx', (r.left + r.width / 2) + 'px');
       gate.style.setProperty('--fx-cy', (r.top + r.height / 2) + 'px');
+      // Radius at which the light's solid part (inner 80%) reaches the farthest corner of the screen.
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      var far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
+      gate.style.setProperty('--fx-full', Math.ceil(far / 0.8) + 'px');
     }
     function done() {
       window.removeEventListener('keydown', onKey, true);

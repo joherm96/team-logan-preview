@@ -60,7 +60,7 @@ html.fx-gated { overflow: hidden; }
   display: grid; place-items: center; padding: 1.2rem;
   background: radial-gradient(ellipse at 50% 0%, #f7eedb 0%, var(--r0, #efe3c8) 60%); /* same as the home page hero */
   color: var(--ink, #1d140c); text-align: center;
-  transition: opacity .45s ease .9s, visibility 0s linear 1.35s;
+  transition: opacity .45s ease .95s, visibility 0s linear 1.4s;
 }
 .fx-gate-in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; animation: fx-gate-rise .9s cubic-bezier(.2, .7, .2, 1) both; }
 @keyframes fx-gate-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
@@ -96,7 +96,7 @@ html.fx-gated { overflow: hidden; }
   /* full-screen layer; only the light's radius grows (no giant scaling, so Chrome never has to redraw a huge layer) */
   position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; --fx-r: 0px;
   background: radial-gradient(circle var(--fx-r) at var(--fx-cx, 50%) var(--fx-cy, 50%),
-    #fff6df 0%, #f7eedb 55%, var(--r0, #efe3c8) 82%, rgb(239 227 200 / 0) 100%);
+    #f7eedb 0%, #f3e8d1 50%, var(--r0, #efe3c8) 80%, rgb(239 227 200 / 0) 100%); /* the page's own colors */
 }
 
 /* leaving: the words fall away, the maze dives toward its lamp, the lamp light floods the screen
@@ -105,13 +105,14 @@ html.fx-gated { overflow: hidden; }
 .fx-gate-out .fx-gate-in { animation: none; }
 .fx-gate-out .fx-gate-kicker, .fx-gate-out .fx-gate-title, .fx-gate-out .fx-gate-btn, .fx-gate-out .fx-gate-note { opacity: 0; transition: opacity .3s ease; }
 .fx-gate-out .fx-gate-stage { box-shadow: 0 0 0 0 rgb(29 20 12 / 0); }
-.fx-gate-out .fx-gate-maze { transform: scale(9); opacity: 0; transition: transform 1.1s cubic-bezier(.45, 0, .7, .4), opacity .15s linear .85s; }
+/* the maze only disappears once the light already covers the whole screen (by ~.92s), so it never blinks out */
+.fx-gate-out .fx-gate-maze { transform: scale(9); opacity: 0; transition: transform 1.1s cubic-bezier(.45, 0, .7, .4), opacity .05s linear 1s; }
 .fx-gate-out .fx-gw, .fx-gate-out .fx-gate-core { animation-play-state: paused; }
-.fx-gate-out .fx-gate-glow { animation: fx-gate-flood .7s cubic-bezier(.55, 0, .75, .45) .32s forwards; }
+.fx-gate-out .fx-gate-glow { animation: fx-gate-flood .62s cubic-bezier(.5, 0, .45, 1) .3s forwards; }
 @keyframes fx-gate-flood {
   0% { opacity: 0; --fx-r: 10px; }
   20% { opacity: 1; }
-  100% { opacity: 1; --fx-r: 150vmax; }
+  100% { opacity: 1; --fx-r: var(--fx-full, 150vmax); }
 }
 
 
