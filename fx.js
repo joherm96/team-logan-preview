@@ -44,6 +44,7 @@
   })();
   var ctx = null, master = null, buffer = null, source = null, startedAt = 0, loading = null;
   var muted = store('fx-music') === 'off';
+  var held = false;   // true while the entry card is up: the music waits for Enter
   function savedPos() {
     try { var o = parseFloat(sessionStorage.getItem('fx-music-pos')); return isFinite(o) ? o : 0; } catch (e) { return 0; }
   }
@@ -61,7 +62,7 @@
   }
   // Schedule the loop. If the browser is still holding audio back, it begins the moment it is allowed.
   function startSource() {
-    if (muted || source || !buffer || !ctx) return;
+    if (muted || held || source || !buffer || !ctx) return;
     var off = savedPos() % buffer.duration, t = ctx.currentTime;
     source = ctx.createBufferSource();
     source.buffer = buffer;
@@ -125,10 +126,10 @@
     paintPiano();
   });
   /* ---------- Entry screen ----------
-     Browsers will not play sound before the visitor clicks, so the first page of a visit opens on a
-     title card with the turning maze. Clicking it (or pressing any key) is that first click: the view
-     dives into the center of the maze and the music starts at the same moment. Skipped when music is muted, when the visitor already entered
-     this visit, or when the browser allows sound without a click. */
+     Every arrival at the site opens on a title card with the turning maze (see wantGate below).
+     Clicking it, or pressing any key, dives into the center of the maze and starts the music at that
+     moment. The music waits for Enter even in browsers that would allow it sooner, so every visitor
+     gets the same opening. A muted visitor still sees the card and stays muted. */
   // The home page maze (same rings, colors and walls), each ring's walls turning on its own.
   var GATE_MAZE = (function () {
     var fills = ['#efe3c8', '#cfb48a', '#b07a3e', '#7d5a3c', '#5a3f2c', '#3e2c1f', '#271c14', '#140d08'];
@@ -152,12 +153,21 @@
     });
     return o + '<circle cx="200" cy="200" r="190" class="fx-gw-rim"/><circle cx="200" cy="200" r="30" fill="url(#fxGateCore)" class="fx-gate-core"/></svg>';
   })();
-  function entered() { try { return sessionStorage.getItem('fx-entered') === '1'; } catch (e) { return false; } }
-  // ?gate in the address always shows the card (for previewing it in a browser that allows sound).
+  // The card shows every time someone arrives at the site, even if they have been here before, their
+  // browser allows sound, or they muted the music. It does not show on a reload of the page.
+  // (Moving between pages inside the site never reloads, so it does not show there either.)
+  // ?gate in the address always shows it, even on a reload.
   var forceGate = /[?&]gate\b/.test(location.search);
+  function isReload() {
+    try {
+      var nav = performance.getEntriesByType('navigation')[0];
+      if (nav) return nav.type === 'reload';
+      return performance.navigation && performance.navigation.type === 1;
+    } catch (e) { return false; }
+  }
+  function wantGate() { return forceGate || !isReload(); }
   function showGate() {
-    if (!forceGate && (muted || entered() || !AC)) return;
-    if (document.querySelector('.fx-gate')) return;
+    if (!wantGate() || document.querySelector('.fx-gate')) return;
     var gate = el('div', 'fx-gate');
     gate.setAttribute('role', 'dialog');
     gate.setAttribute('aria-modal', 'true');
@@ -171,7 +181,7 @@
     var go = el('button', 'fx-gate-btn', 'Enter the maze');
     go.type = 'button';
     inner.appendChild(go);
-    inner.appendChild(el('p', 'fx-gate-note', 'Sound on \u00b7 click anywhere or press any key'));
+    inner.appendChild(el('p', 'fx-gate-note', (muted ? 'Sound off' : 'Sound on') + ' \u00b7 click anywhere or press any key'));
     gate.appendChild(inner);
     // The lamp light that floods the screen on the way in, so the dive ends on parchment, not darkness.
     gate.appendChild(el('div', 'fx-gate-glow'));
@@ -188,7 +198,7 @@
     }
     function enter() {
       if (gate.classList.contains('fx-gate-out')) return;
-      try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
+      held = false;
       unlock();
       placeGlow();
       root.classList.remove('fx-gated');
@@ -200,19 +210,6 @@
     gate.addEventListener('click', enter);
     window.addEventListener('keydown', onKey, true);
     window.addEventListener('resize', placeGlow);
-    // If this browser lets the music play without a click, the card is not needed: take it away
-    // quietly before it has faded in (no dive), and the music just plays.
-    if (ctx && !forceGate) {
-      var check = function () {
-        if (ctx.state !== 'running' || gate.classList.contains('fx-gate-out') || !gate.parentNode) return;
-        try { sessionStorage.setItem('fx-entered', '1'); } catch (e) {}
-        root.classList.remove('fx-gated');
-        gate.parentNode.removeChild(gate);
-        done();
-      };
-      ctx.addEventListener('statechange', check);
-      check();
-    }
   }
 
   // Read-only status, used by the site's own browser test.
@@ -343,6 +340,7 @@
   /* ---------- boot ---------- */
   function boot() {
     document.body.appendChild(dock);
+    held = wantGate();
     paintPiano();
     prepare();
     showGate();
