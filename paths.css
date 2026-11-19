@@ -28,3 +28,4 @@
 .illus figcaption { margin-top: 1rem; max-width: 44rem; font: italic 400 1.12rem/1.55 var(--fell); color: var(--ink); }
 .illus figcaption p { margin: 0; }
 .illus .illus-credit { margin-top: .5rem; font: 400 .85rem var(--fellsc); letter-spacing: .05em; color: var(--r4); font-style: normal; }
+.illus-flat img { box-shadow: none; outline: 0; border-radius: 0; }
