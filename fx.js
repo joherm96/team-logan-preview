@@ -187,14 +187,34 @@
     gate.appendChild(el('div', 'fx-gate-glow'));
     document.body.appendChild(gate);
     root.classList.add('fx-gated');
+    // Light that floods the screen at the end of the dive. It is a circle already big enough to cover
+    // the screen, shrunk down and grown back with transform (GPU, drawn in step with the zooming maze).
+    // Its color is the background of the part of the page behind the card, so the page fades in
+    // without a jump (the top of the page is parchment, the Paths section is dark brown).
+    function behindColor() {
+      // look through the card (pointer-events:none takes effect at once; its visibility has a delayed fade)
+      gate.style.pointerEvents = 'none';
+      var e = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
+      gate.style.pointerEvents = '';
+      // solid colors only: see-through ones (like the Path cards' tint) are skipped for what is behind them
+      function solid(c) { var a = c.match(/rgba\([^,]+,[^,]+,[^,]+,\s*([\d.]+)\)/); return !a || +a[1] >= 0.9; }
+      for (; e && e !== document.documentElement; e = e.parentElement) {
+        var cs = getComputedStyle(e);
+        var m = (cs.backgroundImage && cs.backgroundImage.match(/rgba?\([^)]*\)/g) || []).filter(solid);
+        if (m.length) return m[Math.floor((m.length - 1) / 2)];
+        if (cs.backgroundColor && solid(cs.backgroundColor)) return cs.backgroundColor;
+      }
+      return getComputedStyle(document.body).backgroundColor || '#efe3c8';
+    }
     function placeGlow() {
       var r = stage.getBoundingClientRect();
-      gate.style.setProperty('--fx-cx', (r.left + r.width / 2) + 'px');
-      gate.style.setProperty('--fx-cy', (r.top + r.height / 2) + 'px');
-      // Radius at which the light's solid part (inner 80%) reaches the farthest corner of the screen.
       var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      var far = Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy));
-      gate.style.setProperty('--fx-full', Math.ceil(far / 0.8) + 'px');
+      var far = Math.ceil(Math.hypot(Math.max(cx, innerWidth - cx), Math.max(cy, innerHeight - cy)) / 0.8);
+      var g = gate.querySelector('.fx-gate-glow');
+      g.style.left = (cx - far) + 'px'; g.style.top = (cy - far) + 'px';
+      g.style.width = g.style.height = (2 * far) + 'px';
+      g.style.setProperty('--fx-start', (Math.max(r.width * 0.09, 12) / far).toFixed(4));
+      g.style.setProperty('--fx-c', behindColor());
     }
     function done() {
       window.removeEventListener('keydown', onKey, true);
